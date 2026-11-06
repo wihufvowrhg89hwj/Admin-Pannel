@@ -1,0 +1,16 @@
+{
+  "name": "archer-c24-hotspot-admin-backend",
+  "version": "1.0.0",
+  "description": "TP-Link Archer C24 v2 Admin Panel & bKash/Nagad/Rocket Hotspot Captive Portal Backend with Firebase Realtime Sync",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  }
+}
