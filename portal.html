@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wi-Fi Hotspot Login &amp; Payment — TP-Link Archer C24</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="portal-body">
+  <div class="portal-wrapper">
+    <!-- Top Hero Banner -->
+    <div class="portal-hero">
+      <div>
+        <div style="font-size:12px;text-transform:uppercase;letter-spacing:1px;opacity:0.9;">
+          TP-Link Archer C24 Captive Portal
+        </div>
+        <h1 style="font-size:24px;font-weight:800;margin:4px 0 6px;" id="portalTitle">
+          TP-Link_8B60 High-Speed Wi-Fi Zone
+        </h1>
+        <p style="font-size:13.5px;opacity:0.95;max-width:600px;" id="portalNotice"></p>
+      </div>
+      <div style="text-align:right;">
+        <div class="portal-status-pill" id="connStatusPill">
+          🔴 Internet Locked (Pay to Connect)
+        </div>
+        <div style="font-size:12px;margin-top:8px;opacity:0.9;">
+          IP: <strong id="clientIpLabel">192.168.0.108</strong> | SSID: <strong id="ssidLabel">TP-Link_8B60</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Internet Session Box (Shown when connected/approved) -->
+    <div class="portal-card" id="activeSessionBox" style="display:none;border:2px solid #28a745;background:#f0fdf4;">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
+        <div>
+          <span class="tp-badge tp-badge-success" style="font-size:12px;padding:4px 12px;">✓ INTERNET ACTIVE</span>
+          <h2 style="font-size:20px;margin-top:8px;color:#14532d;" id="activePkgTitle">Daily Unlimited</h2>
+          <p style="font-size:13px;color:#166534;margin-top:2px;" id="activeMetaText">Speed Limit: 20 Mbps Down / 10 Mbps Up</p>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:12px;color:#166534;">Remaining Session Time</div>
+          <div style="font-size:26px;font-weight:800;color:#15803d;font-family:monospace;" id="sessionCountdown">23:59:55</div>
+          <button class="tp-btn tp-btn-sm tp-btn-danger" style="margin-top:6px;" onclick="disconnectSession()">Disconnect</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pending Manual Payment Box -->
+    <div class="portal-card" id="pendingSessionBox" style="display:none;border:2px solid #f59e0b;background:#fffbeb;">
+      <h3 style="color:#b45309;font-size:17px;">⏳ আপনার পেমেন্ট যাচাই করা হচ্ছে (Pending Admin Approval)</h3>
+      <p style="font-size:13.5px;color:#92400e;margin-top:6px;" id="pendingInfoText"></p>
+      <div style="margin-top:12px;display:flex;gap:10px;align-items:center;">
+        <a href="index.html" target="_blank" class="tp-btn tp-btn-sm">অ্যাডমিন প্যানেল থেকে Approve করুন →</a>
+      </div>
+    </div>
+
+    <!-- Wi-Fi Packages Section -->
+    <div class="portal-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+        <div>
+          <h2 style="font-size:18px;font-weight:800;">১. আপনার পছন্দের ওয়াইফাই প্যাকেজ সিলেক্ট করুন</h2>
+          <p style="font-size:13px;color:#64748b;">প্যাকেজে ক্লিক করে bKash, Nagad বা Rocket দিয়ে পেমেন্ট সম্পন্ন করুন</p>
+        </div>
+        <div id="freeTrialWrap"></div>
+      </div>
+
+      <div class="pkg-grid" id="portalPkgGrid"></div>
+    </div>
+
+    <!-- Voucher / Coupon Code Login Section -->
+    <div class="portal-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
+        <div>
+          <h2 style="font-size:17px;font-weight:800;">২. প্রিপেইড ভাউচার বা কুপন কোড আছে?</h2>
+          <p style="font-size:13px;color:#64748b;">দোকান বা অ্যাডমিন থেকে নেওয়া ভাউচার কোডটি নিচে লিখে সরাসরি কানেক্ট করুন (যেমন: <code>WIFI-2026-DAY1</code>)</p>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <input id="voucherInput" class="tp-input" style="width:220px;text-transform:uppercase;font-weight:700;" placeholder="WIFI-2026-DAY1" />
+          <button class="tp-btn" onclick="redeemVoucher()">🎟️ Connect with Voucher</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Info -->
+    <div style="text-align:center;color:rgba(255,255,255,0.75);font-size:13px;margin-top:18px;">
+      <span>📞 Helpline: <strong id="helplineText">01700-000000</strong></span>
+      <span style="margin:0 10px;">|</span>
+      <a href="index.html" style="color:#4acbd6;text-decoration:none;font-weight:600;">⚙️ Router Admin Panel (192.168.0.1)</a>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       BKASH / NAGAD / ROCKET CHECKOUT MODAL
+       ====================================================================== -->
+  <div class="modal-backdrop" id="payModal">
+    <div class="checkout-modal">
+      <div class="checkout-header bkash" id="modalHeader">
+        <div>
+          <div style="font-size:11px;text-transform:uppercase;opacity:0.9;" id="modalMethodLabel">bKash Payment</div>
+          <div style="font-size:18px;font-weight:800;" id="modalPkgName">Daily Unlimited</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:22px;font-weight:900;" id="modalPrice">৳ 25</div>
+          <button onclick="closePayModal()" style="background:none;border:none;color:#fff;font-size:13px;cursor:pointer;text-decoration:underline;">Cancel</button>
+        </div>
+      </div>
+
+      <div class="checkout-body">
+        <!-- Choose Payment Operator -->
+        <label style="font-size:12px;font-weight:700;color:#475569;display:block;">পেমেন্ট মাধ্যম নির্বাচন করুন:</label>
+        <div class="payment-method-selector" id="methodButtons"></div>
+
+        <!-- Mode Switcher (if admin enabled 'both') -->
+        <div id="modeSwitcherWrap" style="margin-bottom:16px;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;background:#f1f5f9;padding:4px;border-radius:8px;">
+            <button id="btnModeAuto" onclick="setCheckoutMode('auto')" style="padding:8px;border:none;border-radius:6px;font-weight:700;font-size:12.5px;cursor:pointer;background:#fff;color:#0f172a;">
+              ⚡ Auto Gateway
+            </button>
+            <button id="btnModeManual" onclick="setCheckoutMode('manual')" style="padding:8px;border:none;border-radius:6px;font-weight:700;font-size:12.5px;cursor:pointer;background:transparent;color:#64748b;">
+              📝 Manual TrxID
+            </button>
+          </div>
+        </div>
+
+        <!-- AUTO MERCHANT GATEWAY VIEW -->
+        <div id="autoGatewayForm">
+          <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:14px;font-size:13px;">
+            আপনার <strong id="autoOperatorText">bKash</strong> অ্যাকাউন্ট নাম্বার ও পিন দিয়ে পেমেন্ট সম্পন্ন করার সাথে সাথেই অটোমেটিক ইন্টারনেট চালু হয়ে যাবে।
+          </div>
+          <div style="margin-bottom:12px;">
+            <label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px;">Your Wallet Number</label>
+            <input id="autoPhone" class="tp-input" style="width:100%;" placeholder="017XXXXXXXX" value="01712-345678" />
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
+            <div>
+              <label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px;">OTP Code (Demo)</label>
+              <input id="autoOtp" class="tp-input" style="width:100%;" value="4829" />
+            </div>
+            <div>
+              <label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px;">Wallet PIN</label>
+              <input id="autoPin" type="password" class="tp-input" style="width:100%;" value="12345" />
+            </div>
+          </div>
+          <button class="tp-btn" id="autoSubmitBtn" style="width:100%;height:42px;font-weight:700;background:var(--bkash);" onclick="submitPayment('auto')">
+            CONFIRM &amp; PAY NOW
+          </button>
+        </div>
+
+        <!-- MANUAL SEND MONEY + TRXID VIEW -->
+        <div id="manualGatewayForm" style="display:none;">
+          <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:12px;margin-bottom:14px;font-size:13px;color:#92400e;">
+            নিচের নাম্বারে <strong>Send Money / Cash Out</strong> করে আপনার মোবাইল নাম্বার এবং <strong>Transaction ID (TrxID)</strong> দিন:
+            <div style="font-size:16px;font-weight:800;margin-top:6px;color:#0f172a;" id="manualReceiverNum">01711-223344</div>
+          </div>
+          <div style="margin-bottom:12px;">
+            <label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px;">যে নাম্বার থেকে টাকা পাঠিয়েছেন (Sender Number)</label>
+            <input id="manualPhone" class="tp-input" style="width:100%;" placeholder="017XXXXXXXX" />
+          </div>
+          <div style="margin-bottom:16px;">
+            <label style="font-size:12px;font-weight:600;display:block;margin-bottom:4px;">Transaction ID (TrxID)</label>
+            <input id="manualTrxId" class="tp-input" style="width:100%;text-transform:uppercase;font-weight:700;" placeholder="e.g. BK9402LPA8" />
+          </div>
+          <button class="tp-btn" id="manualSubmitBtn" style="width:100%;height:42px;font-weight:700;background:var(--bkash);" onclick="submitPayment('manual')">
+            VERIFY TRXID &amp; CONNECT
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="tpToast" class="tp-toast"></div>
+
+  <script src="app.js"></script>
+  <script>
+    let state = loadHotspotState();
+    let selectedPkg = null;
+    let selectedMethod = "bKash";
+    let selectedMode = "auto";
+    let countdownSeconds = 0;
+    let countdownTimer = null;
+
+    // Sync with Admin Panel approvals in real-time
+    window.addEventListener("storage", () => {
+      state = loadHotspotState();
+      renderPortal();
+      checkPendingApprovalStatus();
+    });
+
+    function renderPortal() {
+      const ps = state.portalSettings;
+      document.getElementById("portalTitle").textContent = ps.hotspotName;
+      document.getElementById("portalNotice").textContent = ps.welcomeNotice;
+      document.getElementById("helplineText").textContent = ps.helplineNumber;
+      document.getElementById("ssidLabel").textContent = state.routerInfo.ssid24;
+
+      // Free trial button
+      const ftWrap = document.getElementById("freeTrialWrap");
+      if (ps.freeTrialEnabled) {
+        ftWrap.innerHTML = `<button class="tp-btn tp-btn-sm tp-btn-secondary" onclick="activateFreeTrial()">🎁 Try ${ps.freeTrialMinutes} Min Free Trial</button>`;
+      } else {
+        ftWrap.innerHTML = "";
+      }
+
+      // Render packages
+      const grid = document.getElementById("portalPkgGrid");
+      grid.innerHTML = state.packages
+        .map(
+          p => `
+        <div class="pkg-card" style="display:flex;flex-direction:column;justify-content:space-between;">
+          <div>
+            ${p.popular ? `<span class="pkg-popular-tag">BEST VALUE</span>` : ""}
+            <div style="font-weight:800;font-size:16px;color:#0f172a;">${p.name}</div>
+            <div class="pkg-price">৳${p.price} <span>/ ${p.durationText}</span></div>
+            <ul class="pkg-meta">
+              <li>⚡ স্পিড: <strong>${p.speedDownMbps} Mbps</strong></li>
+              <li>📊 ডাটা: <strong>${p.dataLimitMB === 0 ? "আনলিমিটেড (Unlimited)" : p.dataLimitMB + " MB"}</strong></li>
+              <li>⏱️ মেয়াদ: <strong>${p.durationText}</strong></li>
+            </ul>
+          </div>
+          <button class="tp-btn" style="width:100%;font-weight:700;" onclick="openPayModal('${p.id}')">
+            💳 Buy with bKash / Nagad / Rocket
+          </button>
+        </div>
+      `
+        )
+        .join("");
+    }
+
+    function openPayModal(pkgId) {
+      selectedPkg = state.packages.find(p => p.id === pkgId);
+      if (!selectedPkg) return;
+
+      const ps = state.portalSettings;
+      document.getElementById("modalPkgName").textContent = selectedPkg.name;
+      document.getElementById("modalPrice").textContent = "৳ " + selectedPkg.price;
+
+      // Available methods
+      const methods = [];
+      if (ps.bkashEnabled) methods.push({ name: "bKash", cls: "bkash", color: "var(--bkash)", num: ps.bkashNumber });
+      if (ps.nagadEnabled) methods.push({ name: "Nagad", cls: "nagad", color: "var(--nagad)", num: ps.nagadNumber });
+      if (ps.rocketEnabled) methods.push({ name: "Rocket", cls: "rocket", color: "var(--rocket)", num: ps.rocketNumber });
+
+      if (methods.length === 0) {
+        showToast("No payment gateway is currently enabled in Admin Panel.");
+        return;
+      }
+
+      selectedMethod = methods[0].name;
+      const btnWrap = document.getElementById("methodButtons");
+      btnWrap.innerHTML = methods
+        .map(
+          m => `
+        <div class="pay-method-btn ${m.cls} ${m.name === selectedMethod ? "selected" : ""}" onclick="selectOperator('${m.name}')">
+          ${m.name}
+        </div>
+      `
+        )
+        .join("");
+
+      // Configure Auto vs Manual availability
+      const modeWrap = document.getElementById("modeSwitcherWrap");
+      if (ps.paymentMode === "both") {
+        modeWrap.style.display = "block";
+        setCheckoutMode("auto");
+      } else if (ps.paymentMode === "auto") {
+        modeWrap.style.display = "none";
+        setCheckoutMode("auto");
+      } else {
+        modeWrap.style.display = "none";
+        setCheckoutMode("manual");
+      }
+
+      updateModalBranding();
+      document.getElementById("payModal").classList.add("open");
+    }
+
+    function closePayModal() {
+      document.getElementById("payModal").classList.remove("open");
+    }
+
+    function selectOperator(name) {
+      selectedMethod = name;
+      document.querySelectorAll(".pay-method-btn").forEach(el => {
+        el.classList.toggle("selected", el.textContent.trim() === name);
+      });
+      updateModalBranding();
+    }
+
+    function setCheckoutMode(mode) {
+      selectedMode = mode;
+      document.getElementById("autoGatewayForm").style.display = mode === "auto" ? "block" : "none";
+      document.getElementById("manualGatewayForm").style.display = mode === "manual" ? "block" : "none";
+
+      const bAuto = document.getElementById("btnModeAuto");
+      const bMan = document.getElementById("btnModeManual");
+      if (bAuto && bMan) {
+        bAuto.style.background = mode === "auto" ? "#ffffff" : "transparent";
+        bAuto.style.color = mode === "auto" ? "#0f172a" : "#64748b";
+        bMan.style.background = mode === "manual" ? "#ffffff" : "transparent";
+        bMan.style.color = mode === "manual" ? "#0f172a" : "#64748b";
+      }
+    }
+
+    function updateModalBranding() {
+      const ps = state.portalSettings;
+      const header = document.getElementById("modalHeader");
+      header.className = "checkout-header " + selectedMethod.toLowerCase();
+      document.getElementById("modalMethodLabel").textContent = selectedMethod + " Secure Checkout";
+      document.getElementById("autoOperatorText").textContent = selectedMethod;
+
+      const colorMap = {
+        bKash: "var(--bkash)",
+        Nagad: "var(--nagad)",
+        Rocket: "var(--rocket)"
+      };
+      const numMap = {
+        bKash: ps.bkashNumber,
+        Nagad: ps.nagadNumber,
+        Rocket: ps.rocketNumber
+      };
+      document.getElementById("autoSubmitBtn").style.background = colorMap[selectedMethod];
+      document.getElementById("manualSubmitBtn").style.background = colorMap[selectedMethod];
+      document.getElementById("manualReceiverNum").textContent = `${selectedMethod}: ${numMap[selectedMethod]}`;
+    }
+
+    function submitPayment(mode) {
+      if (!selectedPkg) return;
+      const ps = state.portalSettings;
+      let phone = "";
+      let trxId = "";
+      let status = "Approved";
+
+      if (mode === "auto") {
+        phone = document.getElementById("autoPhone").value.trim() || "01712-345678";
+        const prefix = selectedMethod === "bKash" ? "BK" : selectedMethod === "Nagad" ? "NG" : "RK";
+        trxId = prefix + Math.random().toString(36).substring(2, 8).toUpperCase();
+        status = "Approved";
+      } else {
+        phone = document.getElementById("manualPhone").value.trim();
+        trxId = document.getElementById("manualTrxId").value.trim().toUpperCase();
+        if (!phone || !trxId) {
+          showToast("অনুগ্রহ করে আপনার নাম্বার এবং TrxID সঠিকভাবে লিখুন!");
+          return;
+        }
+        status = ps.autoApproveManual ? "Approved" : "Pending";
+      }
+
+      const nowStr = new Date().toISOString().slice(0, 16).replace("T", " ");
+      const newTxn = {
+        id: "TXN-" + Math.floor(1000 + Math.random() * 9000),
+        timestamp: nowStr,
+        customerPhone: phone,
+        clientIp: "192.168.0.108",
+        clientMac: "C8-3A-35-91-8B-60",
+        method: selectedMethod,
+        mode: mode === "auto" ? "Auto Gateway" : "Manual TrxID",
+        trxId,
+        packageId: selectedPkg.id,
+        packageName: selectedPkg.name,
+        amount: selectedPkg.price,
+        status
+      };
+
+      state.transactions.unshift(newTxn);
+
+      // Add or update client in connectedClients
+      const existingClient = state.connectedClients.find(c => c.ip === "192.168.0.108");
+      if (existingClient) {
+        existingClient.packageName = selectedPkg.name;
+        existingClient.downLimitMbps = selectedPkg.speedDownMbps;
+        existingClient.upLimitMbps = selectedPkg.speedUpMbps;
+        existingClient.status = status === "Approved" ? "Active" : "Pending Payment";
+      } else {
+        state.connectedClients.unshift({
+          id: "cli_" + Date.now(),
+          hostname: "Portal-User (" + phone + ")",
+          ip: "192.168.0.108",
+          mac: "C8-3A-35-91-8B-60",
+          band: "5GHz",
+          packageName: selectedPkg.name,
+          remainingMinutes: selectedPkg.durationMinutes || 1440,
+          downLimitMbps: selectedPkg.speedDownMbps,
+          upLimitMbps: selectedPkg.speedUpMbps,
+          dataUsedMB: 12,
+          dataLimitMB: selectedPkg.dataLimitMB,
+          status: status === "Approved" ? "Active" : "Pending Payment"
+        });
+      }
+
+      appendSystemLog(
+        state,
+        "PAYMENT",
+        `${selectedMethod} (${newTxn.mode}) TrxID ${trxId} (৳${selectedPkg.price}) from ${phone} -> ${status}`
+      );
+      saveHotspotState(state);
+      closePayModal();
+
+      if (status === "Approved") {
+        localStorage.setItem("portal_last_txn_id", newTxn.id);
+        startActiveInternetSession(selectedPkg.name, selectedPkg.speedDownMbps, (selectedPkg.durationMinutes || 60) * 60);
+        showToast(`🎉 পেমেন্ট সফল! TrxID: ${trxId} — আপনার ইন্টারনেট চালু হয়েছে।`);
+      } else {
+        localStorage.setItem("portal_last_txn_id", newTxn.id);
+        document.getElementById("pendingSessionBox").style.display = "block";
+        document.getElementById("pendingInfoText").textContent =
+          `আপনার ${selectedMethod} TrxID (${trxId}) জমা হয়েছে। অ্যাডমিন প্যানেল থেকে Approve করার সাথে সাথেই অটোমেটিক ইন্টারনেট চালু হয়ে যাবে।`;
+        showToast(`⏳ TrxID ${trxId} জমা হয়েছে! অ্যাডমিন অনুমোদনের অপেক্ষায়...`);
+      }
+    }
+
+    function checkPendingApprovalStatus() {
+      const lastId = localStorage.getItem("portal_last_txn_id");
+      if (!lastId) return;
+      const txn = state.transactions.find(t => t.id === lastId);
+      if (txn && txn.status === "Approved") {
+        document.getElementById("pendingSessionBox").style.display = "none";
+        const pkg = state.packages.find(p => p.id === txn.packageId) || state.packages[0];
+        startActiveInternetSession(txn.packageName, pkg ? pkg.speedDownMbps : 20, 86400);
+        showToast("✅ অ্যাডমিন আপনার পেমেন্ট Approve করেছেন! ইন্টারনেট চালু হয়েছে।");
+      }
+    }
+
+    function redeemVoucher() {
+      const code = document.getElementById("voucherInput").value.trim().toUpperCase();
+      if (!code) {
+        showToast("অনুগ্রহ করে একটি ভাউচার কোড লিখুন!");
+        return;
+      }
+      const v = state.vouchers.find(item => item.code.toUpperCase() === code);
+      if (!v) {
+        showToast("❌ ভুল ভাউচার কোড! সঠিক কোড দিন।");
+        return;
+      }
+      if (v.status === "Used") {
+        showToast("⚠️ এই ভাউচার কোডটি ইতিমধ্যে ব্যবহার করা হয়েছে!");
+        return;
+      }
+      v.status = "Used";
+      v.usedBy = "Portal User (192.168.0.108)";
+      appendSystemLog(state, "VOUCHER", `Voucher ${v.code} redeemed by 192.168.0.108 (${v.packageName})`);
+      saveHotspotState(state);
+
+      const pkg = state.packages.find(p => p.id === v.packageId) || { speedDownMbps: 25, durationMinutes: 1440 };
+      startActiveInternetSession(v.packageName, pkg.speedDownMbps, (pkg.durationMinutes || 1440) * 60);
+      showToast(`🎟️ ভাউচার কোড (${v.code}) সফল! ইন্টারনেট চালু হয়েছে।`);
+    }
+
+    function activateFreeTrial() {
+      const mins = state.portalSettings.freeTrialMinutes || 10;
+      startActiveInternetSession(`Free Trial (${mins} Mins)`, 10, mins * 60);
+      showToast(`🎁 ${mins} মিনিটের ফ্রি ট্রায়াল চালু হয়েছে!`);
+    }
+
+    function startActiveInternetSession(pkgTitle, speedMbps, seconds) {
+      document.getElementById("activeSessionBox").style.display = "block";
+      document.getElementById("activePkgTitle").textContent = pkgTitle;
+      document.getElementById("activeMetaText").textContent = `Speed Limit: ${speedMbps} Mbps | Gateway: 192.168.0.1 (Archer C24)`;
+      const pill = document.getElementById("connStatusPill");
+      pill.innerHTML = "🟢 Internet Connected &amp; Authorized";
+      pill.style.background = "rgba(40, 167, 69, 0.35)";
+
+      countdownSeconds = seconds;
+      clearInterval(countdownTimer);
+      updateTimerDisplay();
+      countdownTimer = setInterval(() => {
+        if (countdownSeconds > 0) {
+          countdownSeconds--;
+          updateTimerDisplay();
+        }
+      }, 1000);
+    }
+
+    function updateTimerDisplay() {
+      const hrs = Math.floor(countdownSeconds / 3600);
+      const mins = Math.floor((countdownSeconds % 3600) / 60);
+      const secs = countdownSeconds % 60;
+      document.getElementById("sessionCountdown").textContent =
+        String(hrs).padStart(2, "0") + ":" + String(mins).padStart(2, "0") + ":" + String(secs).padStart(2, "0");
+    }
+
+    function disconnectSession() {
+      clearInterval(countdownTimer);
+      document.getElementById("activeSessionBox").style.display = "none";
+      const pill = document.getElementById("connStatusPill");
+      pill.innerHTML = "🔴 Internet Locked (Pay to Connect)";
+      pill.style.background = "rgba(255, 255, 255, 0.2)";
+      showToast("Session disconnected.");
+    }
+
+    renderPortal();
+  </script>
+</body>
+</html>
