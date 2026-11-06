@@ -1,0 +1,7 @@
+node_modules/
+.env
+.vercel/
+*.bin
+*.pdf
+router_full_dump.json
+original_admin.html
