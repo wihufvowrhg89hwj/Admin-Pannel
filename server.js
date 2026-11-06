@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
+const fs = require("fs");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -12,9 +13,8 @@ const FIREBASE_RTDB_URL =
 
 app.use(cors());
 app.use(express.json({ limit: "2mb" }));
-app.use(express.static(path.join(__dirname)));
+app.use(express.static(__dirname));
 
-// In-memory state cache backed by Firebase Realtime Database
 let cachedState = null;
 
 async function syncFromFirebase() {
@@ -28,7 +28,7 @@ async function syncFromFirebase() {
       }
     }
   } catch (err) {
-    // Fallback to in-memory cache if RTDB URL is still being initialized
+    // Fallback to in-memory cache
   }
   return cachedState;
 }
@@ -82,6 +82,15 @@ app.post("/api/pay", async (req, res) => {
     await syncToFirebase(state);
   }
   res.json({ ok: true, transaction: txn });
+});
+
+app.get("/", (req, res) => {
+  const indexPath = path.join(__dirname, "index.html");
+  if (fs.existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
+    res.json({ status: "ok", message: "Archer C24 Hotspot Backend Running" });
+  }
 });
 
 app.get("/portal", (req, res) => {
