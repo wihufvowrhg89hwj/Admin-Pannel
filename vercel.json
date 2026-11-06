@@ -1,8 +1,15 @@
 {
   "version": 2,
-  "cleanUrls": true,
-  "rewrites": [
-    { "source": "/portal", "destination": "/portal.html" },
-    { "source": "/admin", "destination": "/index.html" }
+  "builds": [
+    { "src": "*.html", "use": "@vercel/static" },
+    { "src": "*.css", "use": "@vercel/static" },
+    { "src": "app.js", "use": "@vercel/static" },
+    { "src": "original_admin_files/**", "use": "@vercel/static" }
+  ],
+  "routes": [
+    { "src": "^/$", "dest": "/index.html" },
+    { "src": "^/portal$", "dest": "/portal.html" },
+    { "src": "^/admin$", "dest": "/index.html" },
+    { "src": "/(.*)", "dest": "/$1" }
   ]
 }
