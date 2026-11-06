@@ -1,0 +1,1731 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=0" />
+  <title id="title">Archer C24</title>
+  <!-- Original TP-Link Archer C24 v2 Stylesheets from original_admin_files -->
+  <link href="./original_admin_files/perfect-scrollbar.css" rel="stylesheet" />
+  <link id="baseCss" href="./original_admin_files/base.css" rel="stylesheet" />
+  <link type="text/css" href="./original_admin_files/total.css" rel="stylesheet" />
+  <link type="text/css" href="./original_admin_files/mobile.css" rel="stylesheet" media="screen and (max-width:767px)" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* Ensure smooth layout with original TP-Link CSS + Custom Hotspot extensions */
+    #main-menu .navigator-ul-level1 > li.navigator-li-level1 {
+      cursor: pointer;
+    }
+    .page.with-sidebar #navigator {
+      display: block !important;
+      width: 220px;
+      float: left;
+      background: #fff;
+      border-right: 1px solid #e6e6e6;
+      min-height: 560px;
+    }
+    .page.with-sidebar .page-content-container {
+      margin-left: 220px;
+    }
+    .tp-adv-nav-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .tp-adv-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 18px;
+      font-size: 13.5px;
+      color: #36444b;
+      border-bottom: 1px solid #f2f4f7;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.15s, color 0.15s;
+    }
+    .tp-adv-item:hover {
+      background: #e8f8fa;
+      color: #00a8e8;
+    }
+    .tp-adv-item.active {
+      background: #4acbd6;
+      color: #ffffff;
+      font-weight: 600;
+    }
+    .tp-adv-sublist {
+      list-style: none;
+      background: #f8fafb;
+      display: none;
+    }
+    .tp-adv-sublist.open {
+      display: block;
+    }
+    .tp-adv-subitem {
+      padding: 10px 18px 10px 32px;
+      font-size: 13px;
+      color: #4d5b63;
+      border-bottom: 1px solid #eef1f4;
+      cursor: pointer;
+    }
+    .tp-adv-subitem:hover {
+      color: #00a8e8;
+      background: #f0f9fa;
+    }
+    .tp-adv-subitem.active {
+      color: #00a8e8;
+      font-weight: 700;
+      background: #e3f6f8;
+      border-left: 3px solid #4acbd6;
+    }
+    .switch-label {
+      cursor: pointer;
+    }
+    .map-item {
+      cursor: pointer;
+    }
+    .portal-top-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, #e2136e, #f7941d);
+      color: #fff !important;
+      padding: 5px 14px;
+      border-radius: 16px;
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+      vertical-align: middle;
+      margin-right: 12px;
+      box-shadow: 0 2px 6px rgba(226, 19, 110, 0.3);
+    }
+    .portal-top-pill:hover {
+      opacity: 0.92;
+    }
+  </style>
+</head>
+<body>
+  <div id="main-container" class="container widget-container html-loader-container">
+    <div id="main-view" view="{main}">
+      <div widget="htmlLoader" id="basic-module-container" class="container widget-container html-loader-container">
+        <div id="index-view" view="{index}">
+          <div class="background"><div class="background-decorate"></div></div>
+          <div class="main-content">
+            <!-- ==============================================================
+                 ORIGINAL TP-LINK TOP BAR (FROM original_admin.html)
+                 ============================================================== -->
+            <div class="top">
+              <div class="top-bar">
+                <div id="logo" class="inline-block logo img-container" widget="img">
+                  <img src="./original_admin_files/logo-icon.png" alt="TP-Link" />
+                </div>
+                <div class="logo-separator">|</div>
+                <div widget="displaylabel" class="page-title inline-block container widget-container displaylabel-container">
+                  <div class="widget-wrap-outer text-wrap-outer">
+                    <div class="widget-wrap text-wrap">
+                      <span class="text-wrap-display">Archer&nbsp;C24</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="func-bar inline-block index-top-bar">
+                  <a href="portal.html" target="_blank" class="portal-top-pill" title="Open Client Wi-Fi Payment Portal">
+                    ⚡ Live Captive Portal (bKash/Nagad/Rocket)
+                  </a>
+
+                  <div id="search-button" widget="button" class="inline-block js-search top-func-btn container widget-container button-container" onclick="openQuickSearchModal()">
+                    <div class="widget-wrap-outer button-wrap-outer">
+                      <div class="widget-wrap button-wrap">
+                        <a href="javascript:void(0);" class="button-button" title="Search">
+                          <span class="icon button-icon search-icon"></span>
+                          <span class="text button-text">Search</span>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="func-bar-separator js-search"></div>
+
+                  <div id="user-button" widget="button" class="inline-block top-func-btn js-user container widget-container button-container" onclick="selectTopMenu('advanced', 'sys_admin')">
+                    <div class="widget-wrap-outer button-wrap-outer">
+                      <div class="widget-wrap button-wrap">
+                        <a href="javascript:void(0);" class="button-button" title="TP-Link ID">
+                          <span class="icon button-icon user-button"></span>
+                          <span class="text button-text">TP-Link ID</span>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="func-bar-separator js-user"></div>
+
+                  <div id="upgrade-button" widget="button" class="inline-block top-func-btn js-update container widget-container button-container" onclick="selectTopMenu('advanced', 'sys_firmware')">
+                    <div class="widget-wrap-outer button-wrap-outer">
+                      <div class="widget-wrap button-wrap">
+                        <a href="javascript:void(0);" class="button-button" title="UPDATE">
+                          <span class="icon button-icon upgrade-button"></span>
+                          <span class="text button-text">UPDATE</span>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="func-bar-separator js-update"></div>
+
+                  <div id="logout-button" widget="button" class="inline-block top-func-btn container widget-container button-container" onclick="showToast('Logged in as Admin on 192.168.0.1')">
+                    <div class="widget-wrap-outer button-wrap-outer">
+                      <div class="widget-wrap button-wrap">
+                        <a href="javascript:void(0);" class="button-button" title="Log Out">
+                          <span class="icon button-icon logout-button"></span>
+                          <span class="text button-text">Log Out</span>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ============================================================
+                   ORIGINAL TP-LINK LEVEL-1 MAIN MENU + HOTSPOT & PAY TAB
+                   ============================================================ -->
+              <div id="main-menu" widget="AXNavigator" class="mobile-navigator s-hide container widget-container navigator-container">
+                <div class="widget-wrap-outer navigator-wrap-outer su-scroll ps">
+                  <div class="widget-wrap navigator-wrap">
+                    <ul class="navigator-ul navigator-ul-level1" id="topMenuUl">
+                      <li navi-value="networkMap" class="navigator-li navigator-li-level1 navigator-li-effective selected" onclick="selectTopMenu('networkMap')">
+                        <a href="javascript:void(0)">
+                          <span class="sub-navigator-icon"></span>
+                          <span class="sub-navigator-text">Network Map</span>
+                          <span class="sub-navigator-icon-after"></span>
+                        </a>
+                      </li>
+                      <li navi-value="networkBasic" class="navigator-li navigator-li-level1 navigator-li-effective" onclick="selectTopMenu('networkBasic')">
+                        <a href="javascript:void(0)">
+                          <span class="sub-navigator-icon"></span>
+                          <span class="sub-navigator-text">Internet</span>
+                          <span class="sub-navigator-icon-after"></span>
+                        </a>
+                      </li>
+                      <li navi-value="wirelessBasic" class="navigator-li navigator-li-level1 navigator-li-effective" onclick="selectTopMenu('wirelessBasic')">
+                        <a href="javascript:void(0)">
+                          <span class="sub-navigator-icon"></span>
+                          <span class="sub-navigator-text">Wireless</span>
+                          <span class="sub-navigator-icon-after"></span>
+                        </a>
+                      </li>
+                      <li navi-value="advanced" class="navigator-li navigator-li-level1 has-sub-navi" onclick="selectTopMenu('advanced', 'adv_status')">
+                        <a href="javascript:void(0)">
+                          <span class="sub-navigator-icon"></span>
+                          <span class="sub-navigator-text">Advanced</span>
+                          <span class="sub-navigator-icon-after"></span>
+                        </a>
+                      </li>
+                      <li navi-value="hotspotPay" class="navigator-li navigator-li-level1 has-sub-navi" onclick="selectTopMenu('hotspotPay', 'hs_dashboard')">
+                        <a href="javascript:void(0)">
+                          <span class="sub-navigator-icon"></span>
+                          <span class="sub-navigator-text">💳 Hotspot &amp; Pay <span id="navPendingBadge" style="background:#ffeb3b;color:#111;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:800;margin-left:4px;">LIVE</span></span>
+                          <span class="sub-navigator-icon-after"></span>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ==============================================================
+                 MAIN PAGE BODY (ORIGINAL NETWORK MAP + SIDEBAR + CONTENT)
+                 ============================================================== -->
+            <div class="page no-navigator" id="mainPageWrap">
+              <div class="page-inner">
+                <!-- Left Sidebar Navigator (Visible in Advanced & Hotspot Tabs) -->
+                <div id="navigator" widget="AXNavigator" class="mobile-navigator s-hide container widget-container navigator-container" style="display:none;">
+                  <div class="widget-wrap-outer navigator-wrap-outer su-scroll ps ps--active-y">
+                    <div class="widget-wrap navigator-wrap" id="leftSidebarContent"></div>
+                  </div>
+                </div>
+
+                <!-- Main Page Content Container -->
+                <div class="page-content-container">
+                  <div widget="htmlLoader" class="page-content su-grid-row su-scroll container widget-container html-loader-container ps module-networkMap" id="pageContentBox" style="min-height:560px;">
+
+                    <!-- ======================================================
+                         VIEW 1: ORIGINAL NETWORK MAP (100% FROM original_admin.html)
+                         ====================================================== -->
+                    <div id="view-networkMap" view="{networkMapView}" class="network-map-container">
+                      <div widget="fieldset" class="container widget-container fieldset-container expand">
+                        <div class="fieldset-content">
+                          <div widget="htmlLoader" id="map-router-mode-loader" child-module="mapRouterMode" class="container widget-container html-loader-container">
+                            <div view="{mapRouterModeView}" class="network-map-container">
+                              <!-- Top 3-Node Topology Diagram -->
+                              <div widget="fieldset" class="map-top-container container widget-container fieldset-container expand">
+                                <div class="fieldset-content">
+                                  <div id="map-internet" widget="transition" class="map-item map-internet active" onclick="selectNetmapNode('internet')">
+                                    <div class="map-internet-icon-container">
+                                      <div class="map-internet-icon"><span class="map-internet-icon-status"></span></div>
+                                    </div>
+                                    <p class="map-item-text map-internet-text"><span>Internet</span></p>
+                                  </div>
+
+                                  <div class="map-item map-line"><div class="map-line-inner"></div></div>
+
+                                  <div id="map-router" widget="transition" class="map-item map-router" onclick="selectNetmapNode('router')">
+                                    <div class="map-router-icon-container"><div class="map-router-icon"></div></div>
+                                    <p class="map-item-text map-router-text"><span>Archer C24</span></p>
+                                  </div>
+
+                                  <div class="map-item map-line">
+                                    <div widget="transition" class="map-router-bar" onclick="selectNetmapNode('router')">
+                                      <div id="wireless-2g-item" class="map-router-item-container wireless-item wireless-2g-item">
+                                        <span class="text">2.4G</span><div class="icon"></div>
+                                      </div>
+                                      <div id="wireless-5g-item" class="map-router-item-container wireless-5g-item wireless-item">
+                                        <span class="text">5G</span><div class="icon"></div>
+                                      </div>
+                                    </div>
+                                    <div class="map-line-inner"></div>
+                                  </div>
+
+                                  <div id="map-clients" widget="transition" class="map-item map-clients" onclick="selectNetmapNode('clients')">
+                                    <div class="map-clients-icon-container">
+                                      <div class="map-clients-icon"><span class="map-clients-icon-num" id="mapClientsCountBadge">4</span></div>
+                                    </div>
+                                    <p class="map-item-text map-clients-text"><span>Clients</span></p>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <!-- Sub-panel 1A: Internet Status -->
+                              <div id="map-internet-loader" class="container widget-container html-loader-container" style="display: block;">
+                                <div widget="panel" class="networkmap-panel container widget-container panel-container form">
+                                  <div class="panel-wrap">
+                                    <div class="panel-header">
+                                      <h3 class="panel-title"><span class="panel-title-text">Internet Status</span></h3>
+                                    </div>
+                                    <div class="panel-content" style="display: block">
+                                      <div class="panel-content-container" id="netmapInternetPanelBody"></div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <!-- Sub-panel 1B: Router Info + Wireless + Guest + Ethernet -->
+                              <div id="map-router-loader" class="container widget-container html-loader-container" style="display: none;">
+                                <div id="netmapRouterPanelBody"></div>
+                              </div>
+
+                              <!-- Sub-panel 1C: Connected Clients Grid (Real Clients from original_admin.html) -->
+                              <div id="map-clients-loader" class="container widget-container html-loader-container" style="display: none;">
+                                <div class="basic-device-container">
+                                  <div widget="panel" class="networkmap-panel networkmap-client-panel container widget-container panel-container form">
+                                    <div class="panel-wrap">
+                                      <div class="panel-header">
+                                        <h3 class="panel-title"><span class="panel-title-text">Connected Clients</span></h3>
+                                      </div>
+                                      <div class="panel-content" style="display: block">
+                                        <div class="panel-content-container">
+                                          <div widget="button" class="link-button inline-block panel-header-button container widget-container button-container label-empty" onclick="selectTopMenu('advanced', 'sec_access')">
+                                            <div class="widget-wrap-outer button-wrap-outer">
+                                              <div class="widget-wrap button-wrap">
+                                                <a href="javascript:void(0);" class="button-button" title="View Blacklist">
+                                                  <span class="text button-text">View Blacklist</span>
+                                                </a>
+                                              </div>
+                                            </div>
+                                          </div>
+
+                                          <div widget="grid" id="connected-clients-grid" class="connected-clients-grid container widget-container grid-container actioncolumn">
+                                            <style type="text/css">
+                                              div#connected-clients-grid th.grid-header-0,div#connected-clients-grid td.grid-content-td-0{width:0px;padding:0;}
+                                              div#connected-clients-grid th.grid-header-3,div#connected-clients-grid td.grid-content-td-3{width:28%;}
+                                              div#connected-clients-grid th.grid-header-4,div#connected-clients-grid td.grid-content-td-4{width:18%;}
+                                              div#connected-clients-grid th.grid-header-5,div#connected-clients-grid td.grid-content-td-5{width:16%;}
+                                              div#connected-clients-grid th.grid-header-6,div#connected-clients-grid td.grid-content-td-6{width:16%;}
+                                              div#connected-clients-grid th.grid-header-7,div#connected-clients-grid td.grid-content-td-7{width:120px;}
+                                              div#connected-clients-grid th.grid-header-8,div#connected-clients-grid td.grid-content-td-8{width:100px;}
+                                            </style>
+                                            <div class="grid-panel">
+                                              <div class="container widget-container grid-panel-container">
+                                                <div class="grid-panel-wrap">
+                                                  <div class="grid-panel-content">
+                                                    <div class="grid-panel-content-container">
+                                                      <div class="container grid-container">
+                                                        <div class="scroll-x-container">
+                                                          <div class="container grid-header-container">
+                                                            <table border="0" cellspacing="0" cellpadding="0">
+                                                              <tbody>
+                                                                <tr class="grid-header-tr">
+                                                                  <th class="grid-header grid-header-0 grid-header-btn"></th>
+                                                                  <th class="grid-header grid-header-3 deviceName s-hide"><span class="content">Device Info</span></th>
+                                                                  <th class="grid-header grid-header-4 downloadSpeed"><span class="content">Hotspot Plan / Rate</span></th>
+                                                                  <th class="grid-header grid-header-5 txRate center-td"><span class="content">Tx/Rx Rate(Mbps)</span></th>
+                                                                  <th class="grid-header grid-header-6 duration center-td"><span class="content">Duration</span></th>
+                                                                  <th class="grid-header grid-header-7 slEnable center-td"><span class="content">Speed Limit</span></th>
+                                                                  <th class="grid-header grid-header-8 lst grid-header-actioncolumn"><span class="content actioncolumn">Operation</span></th>
+                                                                </tr>
+                                                              </tbody>
+                                                            </table>
+                                                          </div>
+                                                          <div class="grid-content-container-outer">
+                                                            <div class="grid-content-container">
+                                                              <table border="0" cellspacing="0" cellpadding="0">
+                                                                <tbody class="grid-content-data" id="originalClientsTbody"></tbody>
+                                                              </table>
+                                                            </div>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- ======================================================
+                         VIEW 2: DYNAMIC MODULE CONTAINER (INTERNET, WIRELESS, ADVANCED, HOTSPOT)
+                         ====================================================== -->
+                    <div id="view-dynamicModule" style="display: none; padding: 10px 16px;"></div>
+
+                  </div>
+                </div>
+              </div>
+
+              <!-- ============================================================
+                   ORIGINAL TP-LINK FOOTER (SUPPORT & BACK TO TOP)
+                   ============================================================ -->
+              <div class="page-bottom">
+                <div widget="toolTip" class="support-btn container widget-container tooltip-container">
+                  <div class="widget-wrap-outer tooltip-wrap-outer">
+                    <div class="widget-wrap tooltip-wrap">
+                      <div class="tooltip-trigger-container" onclick="window.open('https://www.tp-link.com/Support', '_blank')">
+                        <span class="tooltip-trigger-text">SUPPORT</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div id="back-to-top" widget="button" class="inline-block container widget-container button-container" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+                  <div class="widget-wrap-outer button-wrap-outer">
+                    <div class="widget-wrap button-wrap">
+                      <a href="javascript:void(0);" class="button-button" title="BACK TO TOP">
+                        <span class="icon button-icon back-to-top"></span>
+                        <span class="text button-text">BACK TO TOP</span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Original TP-Link Global Toast Notice -->
+      <div widget="toast" id="tpGlobalNotice" class="container widget-container notice-bar-container success" style="left: 42%; top: auto; bottom: 68px; display: none; z-index: 2000;">
+        <div class="img-wrap"><span class="icon"></span></div>
+        <div class="text-wrap"><span class="text">Operation succeeded.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       ORIGINAL TP-LINK MODALS (EDIT CLIENT NAME & SPEED LIMIT POPUPS)
+       ======================================================================== -->
+  <div id="modalEditClient" class="modal-backdrop">
+    <div class="checkout-modal" style="max-width:460px;">
+      <div style="padding:18px 24px;border-bottom:1px solid #e5e9ec;display:flex;justify-content:space-between;align-items:center;">
+        <h3 style="font-size:17px;color:#36444b;">Edit Device Info &amp; Speed Limit</h3>
+        <button onclick="closeClientModal()" style="background:none;border:none;font-size:18px;cursor:pointer;">✕</button>
+      </div>
+      <div style="padding:24px;">
+        <input type="hidden" id="editClientIdx" />
+        <div class="tp-form-row">
+          <label class="tp-form-label" style="width:140px;">Device Name:</label>
+          <div class="tp-form-value"><input id="editClientName" class="tp-input" style="width:100%;" /></div>
+        </div>
+        <div class="tp-form-row">
+          <label class="tp-form-label" style="width:140px;">MAC Address:</label>
+          <div class="tp-form-value"><input id="editClientMac" class="tp-input" style="width:100%;background:#f5f7fa;" readonly /></div>
+        </div>
+        <div class="tp-form-row">
+          <label class="tp-form-label" style="width:140px;">Download Limit:</label>
+          <div class="tp-form-value"><input id="editClientDown" type="number" class="tp-input" style="width:100%;" placeholder="0 = No Limit (Mbps)" /></div>
+        </div>
+        <div class="tp-form-row">
+          <label class="tp-form-label" style="width:140px;">Upload Limit:</label>
+          <div class="tp-form-value"><input id="editClientUp" type="number" class="tp-input" style="width:100%;" placeholder="0 = No Limit (Mbps)" /></div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:20px;">
+          <button class="tp-btn tp-btn-secondary" onclick="closeClientModal()">CANCEL</button>
+          <button class="tp-btn" onclick="saveClientModal()">SAVE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="tpToast" class="tp-toast"></div>
+
+  <script src="app.js"></script>
+  <script>
+    let state = loadHotspotState();
+    let currentTopMenu = "networkMap";
+    let currentNetmapNode = "internet";
+    let currentSubPage = "adv_status";
+
+    // Complete Advanced Menu Tree (All Original Archer C24 v2 Menus)
+    const ADVANCED_MENU_TREE = [
+      { id: "adv_status", title: "Status", icon: "📊" },
+      {
+        id: "grp_network",
+        title: "Network",
+        icon: "🌐",
+        children: [
+          { id: "net_wan", title: "Internet" },
+          { id: "net_lan", title: "LAN" },
+          { id: "net_dhcp", title: "DHCP Server" },
+          { id: "net_ddns", title: "Dynamic DNS" },
+          { id: "net_iptv", title: "IPTV/VLAN" },
+          { id: "net_routing", title: "Static Routing" }
+        ]
+      },
+      {
+        id: "grp_wireless",
+        title: "Wireless",
+        icon: "📶",
+        children: [
+          { id: "wl_settings", title: "Wireless Settings" },
+          { id: "wl_guest", title: "Guest Network" },
+          { id: "wl_schedule", title: "Wireless Schedule" },
+          { id: "wl_wps", title: "WPS" },
+          { id: "wl_additional", title: "Additional Settings" },
+          { id: "wl_portal", title: "Wireless Portal (Hotspot)" }
+        ]
+      },
+      {
+        id: "grp_nat",
+        title: "NAT Forwarding",
+        icon: "🔀",
+        children: [
+          { id: "nat_pf", title: "Port Forwarding" },
+          { id: "nat_pt", title: "Port Triggering" },
+          { id: "nat_upnp", title: "UPnP" },
+          { id: "nat_dmz", title: "DMZ" },
+          { id: "nat_alg", title: "ALG" }
+        ]
+      },
+      { id: "adv_parental", title: "Parental Controls", icon: "👨‍👩‍👧" },
+      { id: "adv_qos", title: "QoS", icon: "⚡" },
+      {
+        id: "grp_security",
+        title: "Security",
+        icon: "🛡️",
+        children: [
+          { id: "sec_firewall", title: "Firewall" },
+          { id: "sec_access", title: "Access Control" },
+          { id: "sec_binding", title: "IP & MAC Binding" }
+        ]
+      },
+      { id: "adv_ipv6", title: "IPv6", icon: "6️⃣" },
+      {
+        id: "grp_system",
+        title: "System",
+        icon: "⚙️",
+        children: [
+          { id: "sys_opmode", title: "Operation Mode" },
+          { id: "sys_firmware", title: "Firmware Update" },
+          { id: "sys_backup", title: "Backup & Restore" },
+          { id: "sys_admin", title: "Administration" },
+          { id: "sys_syslog", title: "System Log" },
+          { id: "sys_diag", title: "Diagnostics" },
+          { id: "sys_time", title: "Time & Language" },
+          { id: "sys_reboot", title: "Reboot" },
+          { id: "sys_led", title: "LED Control" }
+        ]
+      }
+    ];
+
+    // Custom Hotspot & Pay Menu Tree (bKash, Nagad, Rocket)
+    const HOTSPOT_MENU_TREE = [
+      { id: "hs_dashboard", title: "📊 Sales & TrxID Approval" },
+      { id: "hs_packages", title: "📦 Package & Pricing" },
+      { id: "hs_gateways", title: "🏦 bKash / Nagad / Rocket" },
+      { id: "hs_vouchers", title: "🎟️ Voucher / Coupon" },
+      { id: "hs_clients", title: "⚡ User Speed & Quota" },
+      { id: "hs_portal_ui", title: "🎨 Captive Portal Design" }
+    ];
+
+    // Sync across browser tabs in real-time
+    window.addEventListener("storage", () => {
+      state = loadHotspotState();
+      refreshAllViews();
+      showToast("Live update synced from Captive Portal!");
+    });
+
+    function updateBadges() {
+      const pending = state.transactions.filter(t => t.status === "Pending").length;
+      const badge = document.getElementById("navPendingBadge");
+      if (badge) {
+        badge.textContent = pending > 0 ? pending + " PENDING" : "LIVE";
+        badge.style.background = pending > 0 ? "#ffeb3b" : "#ffffff";
+      }
+      const onlineClients = state.connectedClients.filter(c => c.online).length;
+      const cBadge = document.getElementById("mapClientsCountBadge");
+      if (cBadge) cBadge.textContent = onlineClients;
+    }
+
+    function selectTopMenu(menu, subId) {
+      currentTopMenu = menu;
+      document.querySelectorAll("#topMenuUl > li").forEach(li => {
+        li.classList.toggle("selected", li.getAttribute("navi-value") === menu);
+      });
+
+      const pageWrap = document.getElementById("mainPageWrap");
+      const navSidebar = document.getElementById("navigator");
+      const viewNetmap = document.getElementById("view-networkMap");
+      const viewDyn = document.getElementById("view-dynamicModule");
+
+      if (menu === "networkMap") {
+        pageWrap.className = "page no-navigator";
+        navSidebar.style.display = "none";
+        viewNetmap.style.display = "block";
+        viewDyn.style.display = "none";
+        renderOriginalNetworkMap();
+      } else if (menu === "networkBasic" || menu === "wirelessBasic") {
+        pageWrap.className = "page no-navigator";
+        navSidebar.style.display = "none";
+        viewNetmap.style.display = "none";
+        viewDyn.style.display = "block";
+        if (menu === "networkBasic") renderBasicInternetPage();
+        else renderBasicWirelessPage();
+      } else if (menu === "advanced") {
+        pageWrap.className = "page with-sidebar";
+        navSidebar.style.display = "block";
+        viewNetmap.style.display = "none";
+        viewDyn.style.display = "block";
+        if (subId) currentSubPage = subId;
+        else if (!currentSubPage || currentSubPage.startsWith("hs_")) currentSubPage = "adv_status";
+        renderSidebar(ADVANCED_MENU_TREE);
+        renderSubPageContent();
+      } else if (menu === "hotspotPay") {
+        pageWrap.className = "page with-sidebar";
+        navSidebar.style.display = "block";
+        viewNetmap.style.display = "none";
+        viewDyn.style.display = "block";
+        if (subId) currentSubPage = subId;
+        else if (!currentSubPage.startsWith("hs_")) currentSubPage = "hs_dashboard";
+        renderSidebar(HOTSPOT_MENU_TREE);
+        renderSubPageContent();
+      }
+      updateBadges();
+    }
+
+    // ========================================================================
+    // ORIGINAL NETWORK MAP RENDERING (100% GENUINE TP-LINK DOM)
+    // ========================================================================
+    function selectNetmapNode(node) {
+      currentNetmapNode = node;
+      document.getElementById("map-internet").classList.toggle("active", node === "internet");
+      document.getElementById("map-router").classList.toggle("active", node === "router");
+      document.getElementById("map-clients").classList.toggle("active", node === "clients");
+
+      document.getElementById("map-internet-loader").style.display = node === "internet" ? "block" : "none";
+      document.getElementById("map-router-loader").style.display = node === "router" ? "block" : "none";
+      document.getElementById("map-clients-loader").style.display = node === "clients" ? "block" : "none";
+      renderOriginalNetworkMap();
+    }
+
+    function renderOriginalNetworkMap() {
+      updateBadges();
+      const r = state.routerInfo;
+
+      // 1. Internet Status Panel
+      document.getElementById("netmapInternetPanelBody").innerHTML = `
+        <div class="networkmap-panel-column">
+          <div class="container widget-container displaylabel-container">
+            <div class="widget-fieldlabel-wrap"><div class="widget-fieldlabel-inner"><label class="widget-fieldlabel text-fieldlabel">Connection Status</label><span class="widget-separator">:</span></div></div>
+            <div class="widget-wrap-outer text-wrap-outer"><div class="widget-wrap text-wrap"><span class="text-wrap-display" style="color:#28a745;font-weight:600;">${r.wanStatus}</span></div></div>
+          </div>
+          <div class="container widget-container displaylabel-container">
+            <div class="widget-fieldlabel-wrap"><div class="widget-fieldlabel-inner"><label class="widget-fieldlabel text-fieldlabel">Connection Type</label><span class="widget-separator">:</span></div></div>
+            <div class="widget-wrap-outer text-wrap-outer"><div class="widget-wrap text-wrap"><span class="text-wrap-display">${r.wanType}</span></div></div>
+          </div>
+          <div class="container widget-container displaylabel-container">
+            <div class="widget-fieldlabel-wrap"><div class="widget-fieldlabel-inner"><label class="widget-fieldlabel text-fieldlabel">MAC Address</label><span class="widget-separator">:</span></div></div>
+            <div class="widget-wrap-outer text-wrap-outer"><div class="widget-wrap text-wrap"><span class="text-wrap-display">${r.macAddress}</span></div></div>
+          </div>
+        </div>
+        <div class="networkmap-panel-column">
+          <div class="container widget-container displaylabel-container">
+            <div class="widget-fieldlabel-wrap"><div class="widget-fieldlabel-inner"><label class="widget-fieldlabel text-fieldlabel">Internet IP Address</label><span class="widget-separator">:</span></div></div>
+            <div class="widget-wrap-outer text-wrap-outer"><div class="widget-wrap text-wrap"><span class="text-wrap-display">${r.wanIp}</span></div></div>
+          </div>
+          <div class="container widget-container displaylabel-container">
+            <div class="widget-fieldlabel-wrap"><div class="widget-fieldlabel-inner"><label class="widget-fieldlabel text-fieldlabel">Subnet Mask</label><span class="widget-separator">:</span></div></div>
+            <div class="widget-wrap-outer text-wrap-outer"><div class="widget-wrap text-wrap"><span class="text-wrap-display">${r.subnetMask}</span></div></div>
+          </div>
+          <div class="container widget-container displaylabel-container">
+            <div class="widget-fieldlabel-wrap"><div class="widget-fieldlabel-inner"><label class="widget-fieldlabel text-fieldlabel">Default Gateway</label><span class="widget-separator">:</span></div></div>
+            <div class="widget-wrap-outer text-wrap-outer"><div class="widget-wrap text-wrap"><span class="text-wrap-display">${r.wanGateway}</span></div></div>
+          </div>
+        </div>
+      `;
+
+      // 2. Router Information + Wireless + Guest + Ethernet Panel
+      document.getElementById("netmapRouterPanelBody").innerHTML = `
+        <div widget="panel" class="networkmap-panel container widget-container panel-container form">
+          <div class="panel-wrap">
+            <div class="panel-header"><h3 class="panel-title"><span class="panel-title-text">Router Information</span></h3></div>
+            <div class="panel-content" style="display: block">
+              <div class="panel-content-container">
+                <div class="networkmap-panel-column">
+                  <div class="container widget-container displaylabel-container">
+                    <div class="widget-fieldlabel-wrap"><div class="widget-fieldlabel-inner"><label class="widget-fieldlabel text-fieldlabel">Device Name</label><span class="widget-separator">:</span></div></div>
+                    <div class="widget-wrap-outer text-wrap-outer"><div class="widget-wrap text-wrap"><span class="text-wrap-display">Archer C24</span></div></div>
+                  </div>
+                  <div class="container widget-container displaylabel-container">
+                    <div class="widget-fieldlabel-wrap"><div class="widget-fieldlabel-inner"><label class="widget-fieldlabel text-fieldlabel">MAC Address</label><span class="widget-separator">:</span></div></div>
+                    <div class="widget-wrap-outer text-wrap-outer"><div class="widget-wrap text-wrap"><span class="text-wrap-display">${r.macAddress}</span></div></div>
+                  </div>
+                  <div class="container widget-container displaylabel-container">
+                    <div class="widget-fieldlabel-wrap"><div class="widget-fieldlabel-inner"><label class="widget-fieldlabel text-fieldlabel">Serial Number</label><span class="widget-separator">:</span></div></div>
+                    <div class="widget-wrap-outer text-wrap-outer"><div class="widget-wrap text-wrap"><span class="text-wrap-display">${r.serialNumber}</span></div></div>
+                  </div>
+                </div>
+                <div class="networkmap-panel-column">
+                  <div class="container widget-container displaylabel-container">
+                    <div class="widget-fieldlabel-wrap"><div class="widget-fieldlabel-inner"><label class="widget-fieldlabel text-fieldlabel">IPv4 LAN IP</label><span class="widget-separator">:</span></div></div>
+                    <div class="widget-wrap-outer text-wrap-outer"><div class="widget-wrap text-wrap"><span class="text-wrap-display">${r.lanIp}</span></div></div>
+                  </div>
+                  <div class="container widget-container displaylabel-container">
+                    <div class="widget-fieldlabel-wrap"><div class="widget-fieldlabel-inner"><label class="widget-fieldlabel text-fieldlabel">IPv6 LAN IP</label><span class="widget-separator">:</span></div></div>
+                    <div class="widget-wrap-outer text-wrap-outer"><div class="widget-wrap text-wrap"><span class="text-wrap-display">${r.ipv6LanIp}</span></div></div>
+                  </div>
+                  <div class="container widget-container displaylabel-container">
+                    <div class="widget-fieldlabel-wrap"><div class="widget-fieldlabel-inner"><label class="widget-fieldlabel text-fieldlabel">Firmware</label><span class="widget-separator">:</span></div></div>
+                    <div class="widget-wrap-outer text-wrap-outer"><div class="widget-wrap text-wrap"><span class="text-wrap-display">${r.firmwareVersion}</span></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div widget="panel" id="wireless-panel" class="networkmap-panel container widget-container panel-container form">
+          <div class="panel-wrap">
+            <div class="panel-header"><h3 class="panel-title"><span class="panel-title-text">Wireless</span></h3></div>
+            <div class="panel-content" style="display: block">
+              <div class="panel-content-container">
+                <div widget="button" class="icon-button edit-icon-btn inline-block panel-header-button container widget-container button-container label-empty" onclick="selectTopMenu('wirelessBasic')">
+                  <div class="widget-wrap-outer button-wrap-outer"><div class="widget-wrap button-wrap"><a href="javascript:void(0);" class="button-button" title="Edit"><span class="text button-text">Edit</span></a></div></div>
+                </div>
+                <div class="networkmap-panel-column">
+                  <div widget="switch" class="em container widget-container switch-container" onclick="r.enable24=!r.enable24;saveHotspotState(state);renderOriginalNetworkMap();showToast('2.4GHz Wireless '+(r.enable24?'Enabled':'Disabled'))">
+                    <div class="widget-fieldlabel-wrap"><div class="widget-fieldlabel-inner"><label class="widget-fieldlabel switch-fieldlabel">2.4 GHz Wireless</label><span class="widget-separator">:</span></div></div>
+                    <div class="widget-wrap-outer switch-wrap-outer"><div class="switch-wrap"><div class="widget-wrap"><label class="switch-label ${r.enable24 ? "checked" : ""}"><span class="icon-bg"></span><span class="icon-ball"></span></label></div></div></div>
+                  </div>
+                  <div class="container widget-container displaylabel-container">
+                    <div class="widget-fieldlabel-wrap"><div class="widget-fieldlabel-inner"><label class="widget-fieldlabel text-fieldlabel">Network Name (SSID)</label><span class="widget-separator">:</span></div></div>
+                    <div class="widget-wrap-outer text-wrap-outer"><div class="widget-wrap text-wrap"><span class="text-wrap-display">${r.ssid24}</span></div></div>
+                  </div>
+                  <div class="container widget-container displaylabel-container">
+                    <div class="widget-fieldlabel-wrap"><div class="widget-fieldlabel-inner"><label class="widget-fieldlabel text-fieldlabel">Password</label><span class="widget-separator">:</span></div></div>
+                    <div class="widget-wrap-outer text-wrap-outer"><div class="widget-wrap text-wrap"><span class="text-wrap-display">${r.pass24}</span></div></div>
+                  </div>
+                  <div class="container widget-container displaylabel-container">
+                    <div class="widget-fieldlabel-wrap"><div class="widget-fieldlabel-inner"><label class="widget-fieldlabel text-fieldlabel">Channel</label><span class="widget-separator">:</span></div></div>
+                    <div class="widget-wrap-outer text-wrap-outer"><div class="widget-wrap text-wrap"><span class="text-wrap-display">${r.channel24}</span></div></div>
+                  </div>
+                </div>
+                <div class="networkmap-panel-column">
+                  <div widget="switch" class="em container widget-container switch-container" onclick="r.enable5=!r.enable5;saveHotspotState(state);renderOriginalNetworkMap();showToast('5GHz Wireless '+(r.enable5?'Enabled':'Disabled'))">
+                    <div class="widget-fieldlabel-wrap"><div class="widget-fieldlabel-inner"><label class="widget-fieldlabel switch-fieldlabel">5 GHz Wireless</label><span class="widget-separator">:</span></div></div>
+                    <div class="widget-wrap-outer switch-wrap-outer"><div class="switch-wrap"><div class="widget-wrap"><label class="switch-label ${r.enable5 ? "checked" : ""}"><span class="icon-bg"></span><span class="icon-ball"></span></label></div></div></div>
+                  </div>
+                  <div class="container widget-container displaylabel-container">
+                    <div class="widget-fieldlabel-wrap"><div class="widget-fieldlabel-inner"><label class="widget-fieldlabel text-fieldlabel">Network Name (SSID)</label><span class="widget-separator">:</span></div></div>
+                    <div class="widget-wrap-outer text-wrap-outer"><div class="widget-wrap text-wrap"><span class="text-wrap-display">${r.ssid5}</span></div></div>
+                  </div>
+                  <div class="container widget-container displaylabel-container">
+                    <div class="widget-fieldlabel-wrap"><div class="widget-fieldlabel-inner"><label class="widget-fieldlabel text-fieldlabel">Password</label><span class="widget-separator">:</span></div></div>
+                    <div class="widget-wrap-outer text-wrap-outer"><div class="widget-wrap text-wrap"><span class="text-wrap-display">${r.pass5}</span></div></div>
+                  </div>
+                  <div class="container widget-container displaylabel-container">
+                    <div class="widget-fieldlabel-wrap"><div class="widget-fieldlabel-inner"><label class="widget-fieldlabel text-fieldlabel">Channel</label><span class="widget-separator">:</span></div></div>
+                    <div class="widget-wrap-outer text-wrap-outer"><div class="widget-wrap text-wrap"><span class="text-wrap-display">${r.channel5}</span></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div widget="panel" id="guest-panel" class="networkmap-panel container widget-container panel-container form">
+          <div class="panel-wrap">
+            <div class="panel-header"><h3 class="panel-title"><span class="panel-title-text">Guest Network</span></h3></div>
+            <div class="panel-content" style="display: block">
+              <div class="panel-content-container">
+                <div widget="button" class="icon-button edit-icon-btn inline-block panel-header-button container widget-container button-container label-empty" onclick="selectTopMenu('advanced', 'wl_guest')">
+                  <div class="widget-wrap-outer button-wrap-outer"><div class="widget-wrap button-wrap"><a href="javascript:void(0);" class="button-button" title="Edit"><span class="text button-text">Edit</span></a></div></div>
+                </div>
+                <div class="networkmap-panel-column">
+                  <div widget="switch" class="em container widget-container switch-container" onclick="r.guest24Enable=!r.guest24Enable;saveHotspotState(state);renderOriginalNetworkMap();">
+                    <div class="widget-fieldlabel-wrap"><div class="widget-fieldlabel-inner"><label class="widget-fieldlabel switch-fieldlabel">2.4 GHz Wireless</label><span class="widget-separator">:</span></div></div>
+                    <div class="widget-wrap-outer switch-wrap-outer"><div class="switch-wrap"><div class="widget-wrap"><label class="switch-label ${r.guest24Enable ? "checked" : ""}"><span class="icon-bg"></span><span class="icon-ball"></span></label></div></div></div>
+                  </div>
+                  <div class="container widget-container displaylabel-container">
+                    <div class="widget-fieldlabel-wrap"><div class="widget-fieldlabel-inner"><label class="widget-fieldlabel text-fieldlabel">Network Name (SSID)</label><span class="widget-separator">:</span></div></div>
+                    <div class="widget-wrap-outer text-wrap-outer"><div class="widget-wrap text-wrap"><span class="text-wrap-display">${r.guest24Ssid}</span></div></div>
+                  </div>
+                </div>
+                <div class="networkmap-panel-column">
+                  <div widget="switch" class="em container widget-container switch-container" onclick="r.guest5Enable=!r.guest5Enable;saveHotspotState(state);renderOriginalNetworkMap();">
+                    <div class="widget-fieldlabel-wrap"><div class="widget-fieldlabel-inner"><label class="widget-fieldlabel switch-fieldlabel">5 GHz Wireless</label><span class="widget-separator">:</span></div></div>
+                    <div class="widget-wrap-outer switch-wrap-outer"><div class="switch-wrap"><div class="widget-wrap"><label class="switch-label ${r.guest5Enable ? "checked" : ""}"><span class="icon-bg"></span><span class="icon-ball"></span></label></div></div></div>
+                  </div>
+                  <div class="container widget-container displaylabel-container">
+                    <div class="widget-fieldlabel-wrap"><div class="widget-fieldlabel-inner"><label class="widget-fieldlabel text-fieldlabel">Network Name (SSID)</label><span class="widget-separator">:</span></div></div>
+                    <div class="widget-wrap-outer text-wrap-outer"><div class="widget-wrap text-wrap"><span class="text-wrap-display">${r.guest5Ssid}</span></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div widget="panel" id="interface-list-panel" class="networkmap-panel container widget-container panel-container form">
+          <div class="panel-wrap">
+            <div class="panel-header"><h3 class="panel-title"><span class="panel-title-text">Ethernet Status</span></h3></div>
+            <div class="panel-content" style="display: block">
+              <div class="panel-content-container">
+                <div widget="interfaceList" class="widget-container interface-list-container">
+                  <ul class="interface-list-wrap">
+                    <li class="interface-list-item connected"><div class="interface-item-wrap"><span class="interface-icon"></span><span class="interface-name">Internet</span><span class="interface-speed-detail">100Mbps</span></div></li>
+                    <li class="interface-list-item disconnected"><div class="interface-item-wrap"><span class="interface-icon"></span><span class="interface-name">LAN 1</span><span class="interface-speed-detail">---</span></div></li>
+                    <li class="interface-list-item disconnected"><div class="interface-item-wrap"><span class="interface-icon"></span><span class="interface-name">LAN 2</span><span class="interface-speed-detail">---</span></div></li>
+                    <li class="interface-list-item disconnected"><div class="interface-item-wrap"><span class="interface-icon"></span><span class="interface-name">LAN 3</span><span class="interface-speed-detail">---</span></div></li>
+                    <li class="interface-list-item disconnected"><div class="interface-item-wrap"><span class="interface-icon"></span><span class="interface-name">LAN 4</span><span class="interface-speed-detail">---</span></div></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // 3. Connected Clients Grid (Real Clients from original_admin.html)
+      const tbody = document.getElementById("originalClientsTbody");
+      tbody.innerHTML = state.connectedClients
+        .map(
+          (c, i) => `
+        <tr class="grid-content-tr" data-key="${c.mac}">
+          <td class="grid-content-td grid-content-td-0 fst"></td>
+          <td class="s-hide grid-content-td grid-content-td-3 grid-content-td-deviceName">
+            <div class="td-content">
+              <div class="device-type-container widget-container">
+                <span class="icon icon-pc"></span>
+                <span class="${c.online ? "online-tag" : "offline-tag"}"></span>
+              </div>
+              <div class="device-info-container widget-container">
+                <div class="name" title="${c.hostname}">${c.hostname}</div>
+                <div class="mac">${c.mac}</div>
+                <div class="ip">${c.ip}</div>
+                <span class="mode ${c.band === "5G" ? "show_5G" : c.band === "2.4G" ? "show_2G" : "show_offline"}"></span>
+                <div class="edit" title="Edit Device" onclick="openClientModal(${i})"></div>
+              </div>
+            </div>
+          </td>
+          <td class="grid-content-td grid-content-td-4">
+            <div class="td-content">
+              <div style="font-weight:600;font-size:12px;color:#00a8e8;">${c.packageName || "---"}</div>
+              <div style="font-size:11px;color:#76838f;">Used: ${c.dataUsedMB} MB</div>
+            </div>
+          </td>
+          <td class="center-td grid-content-td grid-content-td-5">
+            <div class="td-content">
+              <div class="interface-container widget-container">
+                ${c.online ? '<span class="icon icon-wireless signal-4"></span>' : ""}
+                <span class="text">${c.txRxRate || "---"}</span>
+              </div>
+            </div>
+          </td>
+          <td class="center-td grid-content-td grid-content-td-6">
+            <div class="td-content"><div class="duration-container widget-container">${c.duration || "---"}</div></div>
+          </td>
+          <td class="s-last-td center-td grid-content-td grid-content-td-7">
+            <div class="td-content">
+              <div class="speed-limit-info-container" onclick="openClientModal(${i})" style="cursor:pointer;">
+                <div class="empty-content">${c.downLimitMbps > 0 ? c.downLimitMbps + " Mbps" : "---"}</div>
+                <div class="edit-limit"></div>
+              </div>
+            </div>
+          </td>
+          <td class="grid-content-td grid-content-td-8 lst">
+            <div class="td-content">
+              <div class="grid-content-td-wrap">
+                <a href="javascript:void(0)" class="grid-content-btn btn-block-grey" title="Block / Unblock Device" onclick="toggleBlockClient(${i})">
+                  <span class="icon"></span>
+                  <span class="text" style="font-size:11px;color:${c.status === "Blocked" ? "#e53935" : "#4d5b63"}">${c.status === "Blocked" ? "Unblock" : "Block"}</span>
+                </a>
+              </div>
+            </div>
+          </td>
+        </tr>
+      `
+        )
+        .join("");
+    }
+
+    // ========================================================================
+    // SIDEBAR RENDERER FOR ADVANCED & HOTSPOT TABS
+    // ========================================================================
+    function renderSidebar(tree) {
+      const box = document.getElementById("leftSidebarContent");
+      box.innerHTML = `<ul class="tp-adv-nav-list">
+        ${tree
+          .map(item => {
+            if (item.children) {
+              const hasActiveChild = item.children.some(ch => ch.id === currentSubPage);
+              return `
+                <li>
+                  <div class="tp-adv-item ${hasActiveChild ? "active" : ""}" onclick="toggleAdvGroup('${item.id}', '${item.children[0].id}')">
+                    <span>${item.icon || ""} ${item.title}</span>
+                    <span style="font-size:11px;">▾</span>
+                  </div>
+                  <ul class="tp-adv-sublist ${hasActiveChild ? "open" : ""}" id="sub_${item.id}">
+                    ${item.children
+                      .map(
+                        ch => `
+                      <li class="tp-adv-subitem ${ch.id === currentSubPage ? "active" : ""}" onclick="selectSubPage('${ch.id}')">
+                        ${ch.title}
+                      </li>
+                    `
+                      )
+                      .join("")}
+                  </ul>
+                </li>
+              `;
+            } else {
+              return `
+                <li>
+                  <div class="tp-adv-item ${item.id === currentSubPage ? "active" : ""}" onclick="selectSubPage('${item.id}')">
+                    <span>${item.icon || ""} ${item.title}</span>
+                  </div>
+                </li>
+              `;
+            }
+          })
+          .join("")}
+      </ul>`;
+    }
+
+    function toggleAdvGroup(groupId, defaultChildId) {
+      currentSubPage = defaultChildId;
+      renderSidebar(currentTopMenu === "advanced" ? ADVANCED_MENU_TREE : HOTSPOT_MENU_TREE);
+      renderSubPageContent();
+    }
+
+    function selectSubPage(subId) {
+      currentSubPage = subId;
+      renderSidebar(currentTopMenu === "advanced" ? ADVANCED_MENU_TREE : HOTSPOT_MENU_TREE);
+      renderSubPageContent();
+    }
+
+    // ========================================================================
+    // BASIC INTERNET & BASIC WIRELESS PAGES
+    // ========================================================================
+    function renderBasicInternetPage() {
+      const r = state.routerInfo;
+      document.getElementById("view-dynamicModule").innerHTML = `
+        <h2 class="tp-section-title">Internet</h2>
+        <p class="tp-section-subtitle">Set up an internet connection with the service information provided by your ISP.</p>
+        <div class="tp-form-row">
+          <label class="tp-form-label">Internet Connection Type:</label>
+          <div class="tp-form-value">
+            <select id="basicWanType" class="tp-select" onchange="r.wanType=this.value">
+              ${["Dynamic IP", "Static IP", "PPPoE", "L2TP", "PPTP"]
+                .map(t => `<option ${r.wanType === t ? "selected" : ""}>${t}</option>`)
+                .join("")}
+            </select>
+          </div>
+        </div>
+        <div class="tp-form-row">
+          <label class="tp-form-label">WAN IPv4 Address:</label>
+          <div class="tp-form-value"><input id="basicWanIp" class="tp-input" value="${r.wanIp}" /></div>
+        </div>
+        <div class="tp-form-row">
+          <label class="tp-form-label">Subnet Mask:</label>
+          <div class="tp-form-value"><input class="tp-input" value="${r.subnetMask}" /></div>
+        </div>
+        <div class="tp-form-row">
+          <label class="tp-form-label">Default Gateway:</label>
+          <div class="tp-form-value"><input id="basicWanGw" class="tp-input" value="${r.wanGateway}" /></div>
+        </div>
+        <div class="tp-form-row">
+          <label class="tp-form-label">Primary DNS:</label>
+          <div class="tp-form-value"><input id="basicDns1" class="tp-input" value="${r.dns1}" /></div>
+        </div>
+        <div class="tp-form-row" style="margin-top:26px;">
+          <label class="tp-form-label"></label>
+          <div class="tp-form-value">
+            <button class="tp-btn tp-btn-wide" onclick="r.wanIp=document.getElementById('basicWanIp').value;r.dns1=document.getElementById('basicDns1').value;saveHotspotState(state);showToast('Operation succeeded.')">SAVE</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderBasicWirelessPage() {
+      const r = state.routerInfo;
+      document.getElementById("view-dynamicModule").innerHTML = `
+        <h2 class="tp-section-title">Wireless Network</h2>
+        <p class="tp-section-subtitle">Personalize the 2.4GHz and 5GHz wireless settings of your Archer C24.</p>
+
+        <div class="tp-form-row">
+          <label class="tp-form-label">Smart Connect:</label>
+          <div class="tp-form-value">
+            <label><input type="checkbox" ${r.smartConnect ? "checked" : ""} onchange="r.smartConnect=this.checked" /> Enable Smart Connect (Combine 2.4GHz &amp; 5GHz into one SSID)</label>
+          </div>
+        </div>
+
+        <hr style="border:none;border-top:1px solid #e5e9ec;margin:20px 0;" />
+        <h3 style="font-size:15px;color:#00a8e8;margin-bottom:14px;">2.4GHz Wireless</h3>
+        <div class="tp-form-row">
+          <label class="tp-form-label">2.4GHz Enable:</label>
+          <div class="tp-form-value"><label><input type="checkbox" id="bwEn24" ${r.enable24 ? "checked" : ""} /> Enable Wireless Radio</label></div>
+        </div>
+        <div class="tp-form-row">
+          <label class="tp-form-label">Network Name (SSID):</label>
+          <div class="tp-form-value"><input id="bwSsid24" class="tp-input" value="${r.ssid24}" /></div>
+        </div>
+        <div class="tp-form-row">
+          <label class="tp-form-label">Password:</label>
+          <div class="tp-form-value"><input id="bwPass24" class="tp-input" value="${r.pass24}" /></div>
+        </div>
+
+        <hr style="border:none;border-top:1px solid #e5e9ec;margin:20px 0;" />
+        <h3 style="font-size:15px;color:#00a8e8;margin-bottom:14px;">5GHz Wireless</h3>
+        <div class="tp-form-row">
+          <label class="tp-form-label">5GHz Enable:</label>
+          <div class="tp-form-value"><label><input type="checkbox" id="bwEn5" ${r.enable5 ? "checked" : ""} /> Enable Wireless Radio</label></div>
+        </div>
+        <div class="tp-form-row">
+          <label class="tp-form-label">Network Name (SSID):</label>
+          <div class="tp-form-value"><input id="bwSsid5" class="tp-input" value="${r.ssid5}" /></div>
+        </div>
+        <div class="tp-form-row">
+          <label class="tp-form-label">Password:</label>
+          <div class="tp-form-value"><input id="bwPass5" class="tp-input" value="${r.pass5}" /></div>
+        </div>
+
+        <div class="tp-form-row" style="margin-top:26px;">
+          <label class="tp-form-label"></label>
+          <div class="tp-form-value">
+            <button class="tp-btn tp-btn-wide" onclick="saveWirelessBasic()">SAVE</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function saveWirelessBasic() {
+      const r = state.routerInfo;
+      r.enable24 = document.getElementById("bwEn24").checked;
+      r.ssid24 = document.getElementById("bwSsid24").value.trim();
+      r.pass24 = document.getElementById("bwPass24").value.trim();
+      r.enable5 = document.getElementById("bwEn5").checked;
+      r.ssid5 = document.getElementById("bwSsid5").value.trim();
+      r.pass5 = document.getElementById("bwPass5").value.trim();
+      saveHotspotState(state);
+      showToast("Operation succeeded.");
+    }
+
+    // ========================================================================
+    // ALL ADVANCED SUBPAGES + HOTSPOT BILLING SUBPAGES
+    // ========================================================================
+    function renderSubPageContent() {
+      const box = document.getElementById("view-dynamicModule");
+      const r = state.routerInfo;
+      const ps = state.portalSettings;
+
+      // ---------------- HOTSPOT & PAY SUBPAGES ----------------
+      if (currentSubPage === "hs_dashboard") {
+        const approved = state.transactions.filter(t => t.status === "Approved");
+        const pending = state.transactions.filter(t => t.status === "Pending");
+        const totalIncome = approved.reduce((s, t) => s + Number(t.amount), 0);
+        const bkashTotal = approved.filter(t => t.method === "bKash").reduce((s, t) => s + Number(t.amount), 0);
+        const nagadTotal = approved.filter(t => t.method === "Nagad").reduce((s, t) => s + Number(t.amount), 0);
+        const rocketTotal = approved.filter(t => t.method === "Rocket").reduce((s, t) => s + Number(t.amount), 0);
+
+        box.innerHTML = `
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+            <div>
+              <h2 class="tp-section-title">Hotspot Sales &amp; TrxID Approval Dashboard</h2>
+              <p class="tp-section-subtitle" style="margin-bottom:14px;border:none;padding:0;">
+                bKash, Nagad এবং Rocket পেমেন্টের লাইভ হিসাব এবং পেন্ডিং TrxID ভেরিফিকেশন।
+              </p>
+            </div>
+            <a href="portal.html" target="_blank" class="tp-btn" style="text-decoration:none;">🌐 Open Client Captive Portal</a>
+          </div>
+
+          <div class="tp-stats-grid">
+            <div class="tp-stat-card">
+              <div class="tp-stat-label">Total Revenue</div>
+              <div class="tp-stat-value">৳ ${totalIncome}</div>
+              <div class="tp-stat-sub">${approved.length} Approved Transactions</div>
+            </div>
+            <div class="tp-stat-card bkash">
+              <div class="tp-stat-label">bKash Collection</div>
+              <div class="tp-stat-value" style="color:var(--bkash)">৳ ${bkashTotal}</div>
+              <div class="tp-stat-sub">${ps.bkashNumber}</div>
+            </div>
+            <div class="tp-stat-card nagad">
+              <div class="tp-stat-label">Nagad Collection</div>
+              <div class="tp-stat-value" style="color:var(--nagad)">৳ ${nagadTotal}</div>
+              <div class="tp-stat-sub">${ps.nagadNumber}</div>
+            </div>
+            <div class="tp-stat-card rocket">
+              <div class="tp-stat-label">Rocket Collection</div>
+              <div class="tp-stat-value" style="color:var(--rocket)">৳ ${rocketTotal}</div>
+              <div class="tp-stat-sub">${ps.rocketNumber}</div>
+            </div>
+          </div>
+
+          ${
+            pending.length > 0
+              ? `<div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:14px;margin-bottom:18px;">
+                  <strong style="color:#b45309;">⚠️ ${pending.length}টি Manual Payment (TrxID) আপনার অনুমোদনের অপেক্ষায় আছে!</strong>
+                  <span style="font-size:12.5px;color:#92400e;margin-left:8px;">নিচে <b>Approve</b> ক্লিক করলেই ইউজারের ইন্টারনেট চালু হয়ে যাবে।</span>
+                </div>`
+              : ""
+          }
+
+          <div class="tp-table-wrap">
+            <table class="tp-table">
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Sender Number / IP</th>
+                  <th>Gateway</th>
+                  <th>TrxID</th>
+                  <th>Package</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${state.transactions
+                  .map(
+                    (t, idx) => `
+                  <tr>
+                    <td>${t.timestamp}</td>
+                    <td><strong>${t.customerPhone}</strong><br><small style="color:#76838f">${t.clientIp}</small></td>
+                    <td>
+                      <span class="tp-badge tp-badge-${t.method.toLowerCase()}">${t.method}</span>
+                      <div style="font-size:11px;color:#76838f;">${t.mode}</div>
+                    </td>
+                    <td><code>${t.trxId}</code></td>
+                    <td>${t.packageName}</td>
+                    <td><strong>৳ ${t.amount}</strong></td>
+                    <td>
+                      <span class="tp-badge ${
+                        t.status === "Approved"
+                          ? "tp-badge-success"
+                          : t.status === "Pending"
+                          ? "tp-badge-warning"
+                          : "tp-badge-danger"
+                      }">${t.status}</span>
+                    </td>
+                    <td>
+                      ${
+                        t.status === "Pending"
+                          ? `<button class="tp-btn tp-btn-sm tp-btn-success" onclick="approveTxn(${idx})">✓ Approve</button>
+                             <button class="tp-btn tp-btn-sm tp-btn-danger" onclick="rejectTxn(${idx})">✕</button>`
+                          : `<span style="color:#8c98a4;font-size:12px;">Verified</span>`
+                      }
+                    </td>
+                  </tr>
+                `
+                  )
+                  .join("")}
+              </tbody>
+            </table>
+          </div>
+        `;
+        return;
+      }
+
+      if (currentSubPage === "hs_packages") {
+        box.innerHTML = `
+          <h2 class="tp-section-title">Package &amp; Pricing Manager</h2>
+          <p class="tp-section-subtitle">ক্যাপটিভ পোর্টালে প্রদর্শনের জন্য নতুন ওয়াইফাই প্যাকেজ, মেয়াদ, স্পিড এবং ডাটা কোটা তৈরি করুন।</p>
+
+          <div style="background:#f8fafc;border:1px solid var(--tp-border);border-radius:8px;padding:18px;margin-bottom:22px;">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;">
+              <div>
+                <label style="font-size:12px;display:block;margin-bottom:4px;">Package Name</label>
+                <input id="newPkgName" class="tp-input" style="width:100%" placeholder="e.g. 3 Days Combo" />
+              </div>
+              <div>
+                <label style="font-size:12px;display:block;margin-bottom:4px;">Price (BDT ৳)</label>
+                <input id="newPkgPrice" type="number" class="tp-input" style="width:100%" value="50" />
+              </div>
+              <div>
+                <label style="font-size:12px;display:block;margin-bottom:4px;">Duration Label</label>
+                <input id="newPkgDur" class="tp-input" style="width:100%" value="3 Days" />
+              </div>
+              <div>
+                <label style="font-size:12px;display:block;margin-bottom:4px;">Speed Limit (Mbps)</label>
+                <input id="newPkgSpd" type="number" class="tp-input" style="width:100%" value="30" />
+              </div>
+              <div>
+                <label style="font-size:12px;display:block;margin-bottom:4px;">Data Quota (MB, 0=Unlimited)</label>
+                <input id="newPkgQuota" type="number" class="tp-input" style="width:100%" value="0" />
+              </div>
+              <div style="display:flex;align-items:flex-end;">
+                <button class="tp-btn" style="width:100%" onclick="addPackage()">ADD PACKAGE</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="pkg-grid">
+            ${state.packages
+              .map(
+                (p, i) => `
+              <div class="pkg-card">
+                ${p.popular ? `<span class="pkg-popular-tag">POPULAR</span>` : ""}
+                <div style="font-weight:700;font-size:15px;">${p.name}</div>
+                <div class="pkg-price">৳${p.price} <span>/ ${p.durationText}</span></div>
+                <ul class="pkg-meta">
+                  <li>⚡ Speed: <strong>${p.speedDownMbps} Mbps Down / ${p.speedUpMbps} Mbps Up</strong></li>
+                  <li>📊 Quota: <strong>${p.dataLimitMB === 0 ? "Unlimited" : p.dataLimitMB + " MB"}</strong></li>
+                </ul>
+                <button class="tp-btn tp-btn-sm tp-btn-danger" onclick="state.packages.splice(${i},1);saveHotspotState(state);renderSubPageContent();showToast('Package deleted.')">Delete</button>
+              </div>
+            `
+              )
+              .join("")}
+          </div>
+        `;
+        return;
+      }
+
+      if (currentSubPage === "hs_gateways") {
+        box.innerHTML = `
+          <h2 class="tp-section-title">bKash, Nagad &amp; Rocket Payment Settings</h2>
+          <p class="tp-section-subtitle">Auto Merchant Checkout এবং Manual TrxID ভেরিফিকেশন অপশন কনফিগার করুন।</p>
+
+          <div class="tp-form-row">
+            <label class="tp-form-label">Payment Mode:</label>
+            <div class="tp-form-value">
+              <select id="gwMode" class="tp-select">
+                <option value="both" ${ps.paymentMode === "both" ? "selected" : ""}>Auto Gateway + Manual TrxID (দুটোই থাকবে)</option>
+                <option value="auto" ${ps.paymentMode === "auto" ? "selected" : ""}>Only Official Auto Merchant Checkout</option>
+                <option value="manual" ${ps.paymentMode === "manual" ? "selected" : ""}>Only Manual Send Money + TrxID</option>
+              </select>
+            </div>
+          </div>
+          <div class="tp-form-row">
+            <label class="tp-form-label">Auto-Approve Manual TrxID:</label>
+            <div class="tp-form-value">
+              <label><input type="checkbox" id="gwAutoApp" ${ps.autoApproveManual ? "checked" : ""} /> অটোমেটিক্যালি সব Manual TrxID অনুমোদন করুন</label>
+            </div>
+          </div>
+          <div class="tp-form-row">
+            <label class="tp-form-label" style="color:var(--bkash);font-weight:700;">bKash Number:</label>
+            <div class="tp-form-value">
+              <input id="gwBkNum" class="tp-input" value="${ps.bkashNumber}" />
+              <label style="margin-left:10px;"><input type="checkbox" id="gwBkEn" ${ps.bkashEnabled ? "checked" : ""} /> Enable</label>
+            </div>
+          </div>
+          <div class="tp-form-row">
+            <label class="tp-form-label" style="color:var(--nagad);font-weight:700;">Nagad Number:</label>
+            <div class="tp-form-value">
+              <input id="gwNgNum" class="tp-input" value="${ps.nagadNumber}" />
+              <label style="margin-left:10px;"><input type="checkbox" id="gwNgEn" ${ps.nagadEnabled ? "checked" : ""} /> Enable</label>
+            </div>
+          </div>
+          <div class="tp-form-row">
+            <label class="tp-form-label" style="color:var(--rocket);font-weight:700;">Rocket Number:</label>
+            <div class="tp-form-value">
+              <input id="gwRkNum" class="tp-input" value="${ps.rocketNumber}" />
+              <label style="margin-left:10px;"><input type="checkbox" id="gwRkEn" ${ps.rocketEnabled ? "checked" : ""} /> Enable</label>
+            </div>
+          </div>
+          <div class="tp-form-row" style="margin-top:24px;">
+            <label class="tp-form-label"></label>
+            <div class="tp-form-value">
+              <button class="tp-btn tp-btn-wide" onclick="saveGatewayConfig()">SAVE</button>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      if (currentSubPage === "hs_vouchers") {
+        box.innerHTML = `
+          <h2 class="tp-section-title">Prepaid Voucher &amp; Coupon Generator</h2>
+          <p class="tp-section-subtitle">নগদ টাকায় বিক্রির জন্য প্রিপেইড ওয়াইফাই ভাউচার কোড জেনারেট করুন।</p>
+          <div style="display:flex;gap:12px;align-items:flex-end;margin-bottom:20px;flex-wrap:wrap;">
+            <div>
+              <label style="font-size:12px;display:block;margin-bottom:4px;">Package</label>
+              <select id="vchPkgId" class="tp-select" style="width:240px;">
+                ${state.packages.map(p => `<option value="${p.id}">${p.name} (৳${p.price})</option>`).join("")}
+              </select>
+            </div>
+            <div>
+              <label style="font-size:12px;display:block;margin-bottom:4px;">Quantity</label>
+              <input id="vchQty" type="number" class="tp-input" style="width:100px;" value="3" />
+            </div>
+            <button class="tp-btn" onclick="generateVouchers()">🎟️ GENERATE CODES</button>
+          </div>
+          <div class="tp-table-wrap">
+            <table class="tp-table">
+              <thead><tr><th>Voucher Code</th><th>Package</th><th>Price</th><th>Status</th><th>Used By</th><th>Action</th></tr></thead>
+              <tbody>
+                ${state.vouchers
+                  .map(
+                    (v, i) => `
+                  <tr>
+                    <td><code style="font-weight:700;font-size:14px;">${v.code}</code></td>
+                    <td>${v.packageName}</td>
+                    <td>৳ ${v.price}</td>
+                    <td><span class="tp-badge ${v.status === "Unused" ? "tp-badge-success" : "tp-badge-warning"}">${v.status}</span></td>
+                    <td>${v.usedBy}</td>
+                    <td>
+                      <button class="tp-btn tp-btn-sm tp-btn-secondary" onclick="navigator.clipboard.writeText('${v.code}');showToast('Copied ${v.code}')">Copy</button>
+                      <button class="tp-btn tp-btn-sm tp-btn-danger" onclick="state.vouchers.splice(${i},1);saveHotspotState(state);renderSubPageContent();">Delete</button>
+                    </td>
+                  </tr>
+                `
+                  )
+                  .join("")}
+              </tbody>
+            </table>
+          </div>
+        `;
+        return;
+      }
+
+      if (currentSubPage === "hs_clients") {
+        box.innerHTML = `
+          <h2 class="tp-section-title">User Speed Limit &amp; Data Quota Control</h2>
+          <p class="tp-section-subtitle">রাউটারের সব কানেক্টেড ডিভাইসের (Laptop, Noman, Mamun Bhai, Apu ও নতুন ইউজার) স্পিড ও কোটা নিয়ন্ত্রণ করুন।</p>
+          <div class="tp-table-wrap">
+            <table class="tp-table">
+              <thead>
+                <tr>
+                  <th>Device Name</th>
+                  <th>IP &amp; MAC</th>
+                  <th>Active Plan</th>
+                  <th>Download Speed (Mbps)</th>
+                  <th>Data Used</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${state.connectedClients
+                  .map(
+                    (c, i) => `
+                  <tr>
+                    <td><strong>${c.hostname}</strong> (${c.band})</td>
+                    <td>${c.ip}<br><small style="color:#76838f">${c.mac}</small></td>
+                    <td>${c.packageName}</td>
+                    <td>
+                      <input type="number" value="${c.downLimitMbps}" style="width:70px;padding:4px;border:1px solid #ccc;border-radius:4px;" onchange="state.connectedClients[${i}].downLimitMbps=Number(this.value);saveHotspotState(state);showToast('Speed limit saved!')" /> Mbps
+                    </td>
+                    <td>${c.dataUsedMB} MB</td>
+                    <td><span class="tp-badge ${c.status === "Blocked" ? "tp-badge-danger" : c.online ? "tp-badge-success" : "tp-badge-warning"}">${c.status}</span></td>
+                    <td>
+                      <button class="tp-btn tp-btn-sm tp-btn-secondary" onclick="openClientModal(${i})">Edit</button>
+                      <button class="tp-btn tp-btn-sm ${c.status === "Blocked" ? "tp-btn-success" : "tp-btn-danger"}" onclick="toggleBlockClient(${i})">${c.status === "Blocked" ? "Unblock" : "Block"}</button>
+                    </td>
+                  </tr>
+                `
+                  )
+                  .join("")}
+              </tbody>
+            </table>
+          </div>
+        `;
+        return;
+      }
+
+      if (currentSubPage === "hs_portal_ui" || currentSubPage === "wl_portal") {
+        box.innerHTML = `
+          <h2 class="tp-section-title">Wireless Portal / Captive Portal Customization</h2>
+          <p class="tp-section-subtitle">কেউ ওয়াইফাইতে কানেক্ট করলে যে পেমেন্ট পেজটি ওপেন হবে সেটির টাইটেল, নোটিশ এবং ফ্রি ট্রায়াল সেট করুন।</p>
+          <div class="tp-form-row">
+            <label class="tp-form-label">Portal Authentication:</label>
+            <div class="tp-form-value"><label><input type="checkbox" id="ptEn" ${ps.portalEnabled ? "checked" : ""} /> Enable Captive Portal on 2.4GHz (${r.ssid24}) &amp; 5GHz (${r.ssid5})</label></div>
+          </div>
+          <div class="tp-form-row">
+            <label class="tp-form-label">Portal Title:</label>
+            <div class="tp-form-value"><input id="ptTitle" class="tp-input" style="width:400px;" value="${ps.hotspotName}" /></div>
+          </div>
+          <div class="tp-form-row">
+            <label class="tp-form-label">Welcome Notice:</label>
+            <div class="tp-form-value"><textarea id="ptNotice" class="tp-textarea" style="width:400px;">${ps.welcomeNotice}</textarea></div>
+          </div>
+          <div class="tp-form-row">
+            <label class="tp-form-label">Helpline Number:</label>
+            <div class="tp-form-value"><input id="ptHelp" class="tp-input" value="${ps.helplineNumber}" /></div>
+          </div>
+          <div class="tp-form-row">
+            <label class="tp-form-label">Free Trial:</label>
+            <div class="tp-form-value"><label><input type="checkbox" id="ptTrial" ${ps.freeTrialEnabled ? "checked" : ""} /> Allow ${ps.freeTrialMinutes} Minutes Free Trial</label></div>
+          </div>
+          <div class="tp-form-row" style="margin-top:24px;">
+            <label class="tp-form-label"></label>
+            <div class="tp-form-value" style="display:flex;gap:12px;">
+              <button class="tp-btn" onclick="ps.portalEnabled=document.getElementById('ptEn').checked;ps.hotspotName=document.getElementById('ptTitle').value;ps.welcomeNotice=document.getElementById('ptNotice').value;ps.helplineNumber=document.getElementById('ptHelp').value;ps.freeTrialEnabled=document.getElementById('ptTrial').checked;saveHotspotState(state);showToast('Operation succeeded.')">SAVE</button>
+              <a href="portal.html" target="_blank" class="tp-btn tp-btn-secondary" style="text-decoration:none;">Preview Captive Portal</a>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      // ---------------- ORIGINAL ARCHER C24 ADVANCED SUBPAGES ----------------
+      if (currentSubPage === "adv_status") {
+        box.innerHTML = `
+          <h2 class="tp-section-title">Status</h2>
+          <p class="tp-section-subtitle">All current status parameters of Archer C24 v2.0.</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+            <div style="border:1px solid var(--tp-border);border-radius:6px;padding:18px;">
+              <h3 style="font-size:15px;color:#00a8e8;margin-bottom:10px;">Internet (WAN)</h3>
+              <p><strong>Connection Type:</strong> ${r.wanType}</p>
+              <p><strong>IP Address:</strong> ${r.wanIp}</p>
+              <p><strong>Subnet Mask:</strong> ${r.subnetMask}</p>
+              <p><strong>Default Gateway:</strong> ${r.wanGateway}</p>
+              <p><strong>Primary DNS:</strong> ${r.dns1}</p>
+            </div>
+            <div style="border:1px solid var(--tp-border);border-radius:6px;padding:18px;">
+              <h3 style="font-size:15px;color:#00a8e8;margin-bottom:10px;">LAN &amp; DHCP Server</h3>
+              <p><strong>MAC Address:</strong> ${r.macAddress}</p>
+              <p><strong>IP Address:</strong> ${r.lanIp}</p>
+              <p><strong>Subnet Mask:</strong> ${r.subnetMask}</p>
+              <p><strong>DHCP Server:</strong> ${r.dhcpEnable ? "Enabled" : "Disabled"} (${r.dhcpStart} - ${r.dhcpEnd})</p>
+            </div>
+            <div style="border:1px solid var(--tp-border);border-radius:6px;padding:18px;">
+              <h3 style="font-size:15px;color:#00a8e8;margin-bottom:10px;">Wireless (2.4GHz &amp; 5GHz)</h3>
+              <p><strong>2.4GHz SSID:</strong> ${r.ssid24} (${r.enable24 ? "On" : "Off"})</p>
+              <p><strong>5GHz SSID:</strong> ${r.ssid5} (${r.enable5 ? "On" : "Off"})</p>
+              <p><strong>Guest Network:</strong> ${r.guest24Ssid} (${r.guest24Enable ? "On" : "Off"})</p>
+            </div>
+            <div style="border:1px solid var(--tp-border);border-radius:6px;padding:18px;">
+              <h3 style="font-size:15px;color:#00a8e8;margin-bottom:10px;">Hotspot Billing Gateway</h3>
+              <p><strong>Captive Portal:</strong> ${ps.portalEnabled ? "Enabled" : "Disabled"}</p>
+              <p><strong>bKash / Nagad / Rocket:</strong> Active (${ps.paymentMode.toUpperCase()})</p>
+              <p><strong>Online Clients:</strong> ${state.connectedClients.filter(c => c.online).length} Connected</p>
+            </div>
+          </div>
+        `;
+      } else if (currentSubPage === "sys_firmware") {
+        // Exact Firmware Update page from the user's screenshot
+        box.innerHTML = `
+          <h2 class="tp-section-title">Local Update</h2>
+          <p class="tp-section-subtitle">Update firmware from a local file.</p>
+          <div class="tp-form-row">
+            <label class="tp-form-label">Firmware Version:</label>
+            <div class="tp-form-value">${r.firmwareVersion}</div>
+          </div>
+          <div class="tp-form-row">
+            <label class="tp-form-label">Hardware Version:</label>
+            <div class="tp-form-value">${r.hardwareVersion}</div>
+          </div>
+          <div class="tp-form-row">
+            <label class="tp-form-label">New Firmware File:</label>
+            <div class="tp-form-value">
+              <input id="fwFileInput" class="tp-input" readonly value="c24v2-TPOS-up-boot-128B_2023-06-09_14.01.25.bin" />
+              <input type="file" id="fwFileHidden" accept=".bin" style="display:none" onchange="document.getElementById('fwFileInput').value=this.files[0]?.name||''" />
+            </div>
+          </div>
+          <div class="tp-form-row">
+            <label class="tp-form-label"></label>
+            <div class="tp-form-value"><button class="tp-btn tp-btn-wide" onclick="document.getElementById('fwFileHidden').click()">BROWSE</button></div>
+          </div>
+          <div class="tp-form-row" style="margin-top:20px;">
+            <label class="tp-form-label"></label>
+            <div class="tp-form-value"><button class="tp-btn tp-btn-wide" onclick="showToast('Firmware image verified: Archer C24 2.0 is up to date!')">UPDATE</button></div>
+          </div>
+          <div style="margin-top:30px;color:#4d5b63;font-size:13px;"><strong>Note:</strong> Please select a firmware file version that corresponds to your hardware (${r.hardwareVersion}).</div>
+        `;
+      } else if (currentSubPage === "sys_syslog") {
+        box.innerHTML = `
+          <h2 class="tp-section-title">System Log</h2>
+          <p class="tp-section-subtitle">View a detailed record of system activities.</p>
+          <div style="background:#f8fafc;border:1px solid var(--tp-border);border-radius:4px;padding:14px;height:260px;overflow-y:auto;font-family:Consolas,monospace;font-size:12.5px;line-height:1.7;">
+            ${state.systemLogs.map(l => `<div>${l}</div>`).join("")}
+          </div>
+          <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:14px;">
+            <button class="tp-btn tp-btn-secondary" onclick="renderSubPageContent();showToast('Refreshed')">Refresh</button>
+            <button class="tp-btn tp-btn-secondary" onclick="state.systemLogs=['1 0000:00:01 [INFO] Log cleared.'];saveHotspotState(state);renderSubPageContent();">Clear All</button>
+          </div>
+          <hr style="border:none;border-top:1px solid #e5e9ec;margin:24px 0;" />
+          <h3 class="tp-section-title" style="font-size:16px;">Save Log</h3>
+          <p style="color:#76838f;font-size:13px;margin-bottom:12px;">Save system log locally.</p>
+          <button class="tp-btn" onclick="downloadSystemLog()">SAVE TO LOCAL</button>
+        `;
+      } else if (currentSubPage === "net_dhcp") {
+        box.innerHTML = `
+          <h2 class="tp-section-title">DHCP Server</h2>
+          <p class="tp-section-subtitle">Assign IPv4 addresses automatically to connected devices.</p>
+          <div class="tp-form-row">
+            <label class="tp-form-label">DHCP Server:</label>
+            <div class="tp-form-value"><label><input type="checkbox" ${r.dhcpEnable ? "checked" : ""} onchange="r.dhcpEnable=this.checked" /> Enable</label></div>
+          </div>
+          <div class="tp-form-row">
+            <label class="tp-form-label">IP Address Pool:</label>
+            <div class="tp-form-value">
+              <input class="tp-input" style="width:145px;" value="${r.dhcpStart}" /> - <input class="tp-input" style="width:145px;" value="${r.dhcpEnd}" />
+            </div>
+          </div>
+          <div class="tp-form-row">
+            <label class="tp-form-label">Address Lease Time:</label>
+            <div class="tp-form-value"><input class="tp-input" style="width:120px;" value="${r.dhcpLease}" /> minutes</div>
+          </div>
+          <div class="tp-form-row">
+            <label class="tp-form-label">Default Gateway:</label>
+            <div class="tp-form-value"><input class="tp-input" value="${r.lanIp}" /></div>
+          </div>
+          <div class="tp-form-row">
+            <label class="tp-form-label"></label>
+            <div class="tp-form-value"><button class="tp-btn" onclick="saveHotspotState(state);showToast('Operation succeeded.')">SAVE</button></div>
+          </div>
+        `;
+      } else if (currentSubPage === "sys_opmode") {
+        box.innerHTML = `
+          <h2 class="tp-section-title">Operation Mode</h2>
+          <p class="tp-section-subtitle">Select an operation mode for your Archer C24.</p>
+          ${["Wireless Router", "Access Point", "Range Extender", "WISP"]
+            .map(
+              m => `
+            <div style="margin-bottom:12px;">
+              <label style="display:flex;align-items:center;gap:10px;padding:12px 16px;border:1px solid var(--tp-border);border-radius:6px;cursor:pointer;">
+                <input type="radio" name="opmode" ${r.operationMode === m ? "checked" : ""} onchange="r.operationMode='${m}'" />
+                <strong>${m} Mode</strong>
+              </label>
+            </div>
+          `
+            )
+            .join("")}
+          <button class="tp-btn" style="margin-top:14px;" onclick="saveHotspotState(state);showToast('Operation succeeded.')">SAVE</button>
+        `;
+      } else if (currentSubPage === "sys_backup") {
+        box.innerHTML = `
+          <h2 class="tp-section-title">Backup &amp; Restore</h2>
+          <p class="tp-section-subtitle">Save all Archer C24 + Hotspot settings or restore factory defaults.</p>
+          <button class="tp-btn" onclick="exportFullConfig()">BACKUP</button>
+          <hr style="border:none;border-top:1px solid #e5e9ec;margin:24px 0;" />
+          <h3 style="font-size:15px;margin-bottom:8px;">Factory Default Restore</h3>
+          <button class="tp-btn tp-btn-danger" onclick="if(confirm('Restore all settings to default?')){state=resetToDefaultState();refreshAllViews();showToast('Factory defaults restored.');}">FACTORY RESTORE</button>
+        `;
+      } else {
+        // Generic handler for all remaining Advanced pages (LAN, DDNS, IPTV, Static Routing, Guest, Schedule, WPS, NAT, Parental, QoS, Security, IPv6, Admin, Diag, Time, Reboot, LED)
+        box.innerHTML = `
+          <h2 class="tp-section-title">${currentSubPage.replace(/^[a-z]+_/, "").toUpperCase()} Settings</h2>
+          <p class="tp-section-subtitle">Configure ${currentSubPage} parameters on Archer C24 (${r.hardwareVersion}).</p>
+          <div class="tp-form-row">
+            <label class="tp-form-label">Status:</label>
+            <div class="tp-form-value"><label><input type="checkbox" checked /> Enable Module</label></div>
+          </div>
+          <div class="tp-form-row">
+            <label class="tp-form-label">Router LAN IP:</label>
+            <div class="tp-form-value"><input class="tp-input" value="${r.lanIp}" /></div>
+          </div>
+          <div class="tp-form-row">
+            <label class="tp-form-label">Hardware MAC:</label>
+            <div class="tp-form-value"><input class="tp-input" value="${r.macAddress}" readonly /></div>
+          </div>
+          <div class="tp-form-row" style="margin-top:22px;">
+            <label class="tp-form-label"></label>
+            <div class="tp-form-value"><button class="tp-btn tp-btn-wide" onclick="saveHotspotState(state);showToast('Operation succeeded.')">SAVE</button></div>
+          </div>
+        `;
+      }
+    }
+
+    // ========================================================================
+    // SHARED ACTIONS & HELPERS
+    // ========================================================================
+    function openClientModal(idx) {
+      const c = state.connectedClients[idx];
+      if (!c) return;
+      document.getElementById("editClientIdx").value = idx;
+      document.getElementById("editClientName").value = c.hostname;
+      document.getElementById("editClientMac").value = c.mac;
+      document.getElementById("editClientDown").value = c.downLimitMbps || 0;
+      document.getElementById("editClientUp").value = c.upLimitMbps || 0;
+      document.getElementById("modalEditClient").classList.add("open");
+    }
+
+    function closeClientModal() {
+      document.getElementById("modalEditClient").classList.remove("open");
+    }
+
+    function saveClientModal() {
+      const idx = Number(document.getElementById("editClientIdx").value);
+      const c = state.connectedClients[idx];
+      if (!c) return;
+      c.hostname = document.getElementById("editClientName").value.trim() || c.hostname;
+      c.downLimitMbps = Number(document.getElementById("editClientDown").value) || 0;
+      c.upLimitMbps = Number(document.getElementById("editClientUp").value) || 0;
+      saveHotspotState(state);
+      closeClientModal();
+      refreshAllViews();
+      showToast("Operation succeeded.");
+    }
+
+    function toggleBlockClient(idx) {
+      const c = state.connectedClients[idx];
+      if (!c) return;
+      c.status = c.status === "Blocked" ? "Active" : "Blocked";
+      saveHotspotState(state);
+      refreshAllViews();
+      showToast(`${c.hostname} (${c.mac}) is now ${c.status}`);
+    }
+
+    function approveTxn(idx) {
+      const t = state.transactions[idx];
+      if (!t) return;
+      t.status = "Approved";
+      const cli = state.connectedClients.find(c => c.ip === t.clientIp || c.mac === t.clientMac);
+      if (cli) {
+        cli.status = "Active";
+        cli.packageName = t.packageName;
+      }
+      appendSystemLog(state, "PAYMENT", `Approved ${t.method} TrxID ${t.trxId} (৳${t.amount}) for ${t.customerPhone}`);
+      saveHotspotState(state);
+      refreshAllViews();
+      showToast(`Approved TrxID ${t.trxId}!`);
+    }
+
+    function rejectTxn(idx) {
+      const t = state.transactions[idx];
+      if (!t) return;
+      t.status = "Rejected";
+      saveHotspotState(state);
+      refreshAllViews();
+      showToast(`Rejected TrxID ${t.trxId}`);
+    }
+
+    function addPackage() {
+      const name = document.getElementById("newPkgName").value.trim();
+      const price = Number(document.getElementById("newPkgPrice").value) || 20;
+      const durationText = document.getElementById("newPkgDur").value.trim() || "1 Day";
+      const speedDownMbps = Number(document.getElementById("newPkgSpd").value) || 20;
+      const dataLimitMB = Number(document.getElementById("newPkgQuota").value) || 0;
+      if (!name) {
+        showToast("Please enter a package name.");
+        return;
+      }
+      state.packages.push({
+        id: "pkg_" + Date.now(),
+        name,
+        durationText,
+        durationMinutes: 1440,
+        price,
+        speedDownMbps,
+        speedUpMbps: Math.max(5, Math.floor(speedDownMbps / 2)),
+        dataLimitMB,
+        popular: false
+      });
+      saveHotspotState(state);
+      renderSubPageContent();
+      showToast("Operation succeeded.");
+    }
+
+    function saveGatewayConfig() {
+      const ps = state.portalSettings;
+      ps.paymentMode = document.getElementById("gwMode").value;
+      ps.autoApproveManual = document.getElementById("gwAutoApp").checked;
+      ps.bkashNumber = document.getElementById("gwBkNum").value.trim();
+      ps.bkashEnabled = document.getElementById("gwBkEn").checked;
+      ps.nagadNumber = document.getElementById("gwNgNum").value.trim();
+      ps.nagadEnabled = document.getElementById("gwNgEn").checked;
+      ps.rocketNumber = document.getElementById("gwRkNum").value.trim();
+      ps.rocketEnabled = document.getElementById("gwRkEn").checked;
+      saveHotspotState(state);
+      showToast("Operation succeeded.");
+    }
+
+    function generateVouchers() {
+      const pkgId = document.getElementById("vchPkgId").value;
+      const qty = Math.min(20, Math.max(1, Number(document.getElementById("vchQty").value) || 1));
+      const pkg = state.packages.find(p => p.id === pkgId) || state.packages[0];
+      for (let i = 0; i < qty; i++) {
+        const code = "C24-" + Math.random().toString(36).substring(2, 6).toUpperCase() + "-" + Math.floor(100 + Math.random() * 900);
+        state.vouchers.unshift({
+          code,
+          packageId: pkg.id,
+          packageName: pkg.name,
+          price: pkg.price,
+          status: "Unused",
+          usedBy: "-",
+          createdAt: new Date().toISOString().slice(0, 16).replace("T", " ")
+        });
+      }
+      saveHotspotState(state);
+      renderSubPageContent();
+      showToast(`Generated ${qty} vouchers!`);
+    }
+
+    function downloadSystemLog() {
+      const blob = new Blob([state.systemLogs.join("\n")], { type: "text/plain" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "Archer_C24_System_Log.txt";
+      a.click();
+    }
+
+    function exportFullConfig() {
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "Archer_C24_Full_Config.json";
+      a.click();
+    }
+
+    function openQuickSearchModal() {
+      const q = prompt("Search setting (e.g. bKash, Voucher, Firmware, Wireless, DHCP, Speed):");
+      if (!q) return;
+      const s = q.toLowerCase();
+      if (s.includes("bkash") || s.includes("nagad") || s.includes("rocket") || s.includes("pay")) {
+        selectTopMenu("hotspotPay", "hs_gateways");
+      } else if (s.includes("voucher") || s.includes("coupon")) {
+        selectTopMenu("hotspotPay", "hs_vouchers");
+      } else if (s.includes("package") || s.includes("price")) {
+        selectTopMenu("hotspotPay", "hs_packages");
+      } else if (s.includes("firmware") || s.includes("update")) {
+        selectTopMenu("advanced", "sys_firmware");
+      } else if (s.includes("dhcp")) {
+        selectTopMenu("advanced", "net_dhcp");
+      } else if (s.includes("wireless") || s.includes("wifi")) {
+        selectTopMenu("wirelessBasic");
+      } else {
+        selectTopMenu("hotspotPay", "hs_dashboard");
+      }
+    }
+
+    function refreshAllViews() {
+      updateBadges();
+      if (currentTopMenu === "networkMap") renderOriginalNetworkMap();
+      else if (currentTopMenu === "networkBasic") renderBasicInternetPage();
+      else if (currentTopMenu === "wirelessBasic") renderBasicWirelessPage();
+      else renderSubPageContent();
+    }
+
+    // Boot on Network Map (exact match to original_admin.html)
+    selectTopMenu("networkMap");
+  </script>
+</body>
+</html>
