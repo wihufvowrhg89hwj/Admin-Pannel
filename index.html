@@ -13,20 +13,86 @@
   <link type="text/css" href="./themes/default/css/mobile.css" rel="stylesheet" media="screen and (max-width:767px)" />
   <link rel="stylesheet" href="styles.css" />
   <style>
-    /* Ensure smooth layout with original TP-Link CSS + Custom Hotspot extensions */
+    /* Ensure smooth single-card layout with internal scroll (Exact TP-Link Archer C24 Viewport) */
+    html, body {
+      height: 100%;
+      overflow: hidden !important;
+    }
     #main-menu .navigator-ul-level1 > li.navigator-li-level1 {
       cursor: pointer;
     }
+    .page-inner {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      background: #ffffff;
+      border-radius: 10px 10px 0 0;
+      box-shadow: 0 0 10px 0 rgba(54, 68, 75, 0.3);
+      overflow: hidden !important;
+    }
+    .page-body-row {
+      display: flex;
+      flex: 1;
+      min-height: 0;
+      width: 100%;
+      overflow: hidden;
+    }
     .page.with-sidebar #navigator {
       display: block !important;
-      width: 220px;
-      float: left;
-      background: #fff;
-      border-right: 1px solid #e6e6e6;
-      min-height: 560px;
+      width: 220px !important;
+      flex-shrink: 0;
+      height: 100% !important;
+      overflow-y: auto !important;
+      background: #eaeced !important;
+      border-right: 1px solid #dfe3e6;
+      float: none !important;
+      position: relative !important;
+      left: auto !important;
+      top: auto !important;
     }
-    .page.with-sidebar .page-content-container {
-      margin-left: 220px;
+    .page.with-sidebar #navigator .navigator-wrap-outer {
+      height: auto !important;
+      padding-top: 8px !important;
+      padding-bottom: 16px !important;
+      overflow: visible !important;
+    }
+    .page.with-sidebar .page-content-container,
+    .page.no-navigator .page-content-container {
+      flex: 1;
+      margin-left: 0 !important;
+      height: 100% !important;
+      padding: 0 !important;
+      overflow: hidden !important;
+      display: flex;
+      flex-direction: column;
+      background: #ffffff;
+    }
+    #pageContentBox.page-content {
+      flex: 1;
+      height: 100% !important;
+      min-height: 0 !important;
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+      padding: 24px 36px 36px !important;
+    }
+    .page-bottom {
+      position: relative !important;
+      bottom: auto !important;
+      left: auto !important;
+      right: auto !important;
+      margin: 0 !important;
+      width: 100% !important;
+      height: 46px !important;
+      flex-shrink: 0;
+      background: #ffffff !important;
+      border-top: 1px solid #e5e9ec !important;
+      box-shadow: none !important;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 18px;
+      padding: 0 32px !important;
+      z-index: 10;
     }
     .tp-adv-nav-list {
       list-style: none;
@@ -384,16 +450,17 @@
                  ============================================================== -->
             <div class="page no-navigator" id="mainPageWrap">
               <div class="page-inner">
-                <!-- Left Sidebar Navigator (Visible in Advanced & Hotspot Tabs) -->
-                <div id="navigator" widget="AXNavigator" class="mobile-navigator s-hide container widget-container navigator-container" style="display:none;">
-                  <div class="widget-wrap-outer navigator-wrap-outer su-scroll ps ps--active-y">
-                    <div class="widget-wrap navigator-wrap" id="leftSidebarContent"></div>
+                <div class="page-body-row">
+                  <!-- Left Sidebar Navigator (Visible in Advanced, Internet & Hotspot Tabs) -->
+                  <div id="navigator" widget="AXNavigator" class="mobile-navigator s-hide container widget-container navigator-container" style="display:none;">
+                    <div class="widget-wrap-outer navigator-wrap-outer su-scroll ps ps--active-y">
+                      <div class="widget-wrap navigator-wrap" id="leftSidebarContent"></div>
+                    </div>
                   </div>
-                </div>
 
-                <!-- Main Page Content Container -->
-                <div class="page-content-container">
-                  <div widget="htmlLoader" class="page-content su-grid-row su-scroll container widget-container html-loader-container ps module-networkMap" id="pageContentBox" style="min-height:560px;">
+                  <!-- Main Page Content Container -->
+                  <div class="page-content-container">
+                    <div widget="htmlLoader" class="page-content su-grid-row su-scroll container widget-container html-loader-container ps module-networkMap" id="pageContentBox">
 
                     <!-- ======================================================
                          VIEW 1: ORIGINAL NETWORK MAP (100% FROM original_admin.html)
@@ -543,32 +610,33 @@
                     <!-- ======================================================
                          VIEW 2: DYNAMIC MODULE CONTAINER (INTERNET, WIRELESS, ADVANCED, HOTSPOT)
                          ====================================================== -->
-                    <div id="view-dynamicModule" style="display: none; padding: 10px 16px;"></div>
+                    <div id="view-dynamicModule" style="display: none; padding: 6px 12px 28px;"></div>
 
-                  </div>
-                </div>
-              </div>
-
-              <!-- ============================================================
-                   ORIGINAL TP-LINK FOOTER (SUPPORT & BACK TO TOP)
-                   ============================================================ -->
-              <div class="page-bottom">
-                <div widget="toolTip" class="support-btn container widget-container tooltip-container">
-                  <div class="widget-wrap-outer tooltip-wrap-outer">
-                    <div class="widget-wrap tooltip-wrap">
-                      <div class="tooltip-trigger-container" onclick="window.open('https://www.tp-link.com/Support', '_blank')">
-                        <span class="tooltip-trigger-text">SUPPORT</span>
-                      </div>
                     </div>
                   </div>
                 </div>
-                <div id="back-to-top" widget="button" class="inline-block container widget-container button-container" onclick="window.scrollTo({top:0,behavior:'smooth'})">
-                  <div class="widget-wrap-outer button-wrap-outer">
-                    <div class="widget-wrap button-wrap">
-                      <a href="javascript:void(0);" class="button-button" title="BACK TO TOP">
-                        <span class="icon button-icon back-to-top"></span>
-                        <span class="text button-text">BACK TO TOP</span>
-                      </a>
+
+                <!-- ============================================================
+                     ORIGINAL TP-LINK FOOTER (INSIDE THE SINGLE MAIN CARD)
+                     ============================================================ -->
+                <div class="page-bottom">
+                  <div widget="toolTip" class="support-btn container widget-container tooltip-container">
+                    <div class="widget-wrap-outer tooltip-wrap-outer">
+                      <div class="widget-wrap tooltip-wrap">
+                        <div class="tooltip-trigger-container" onclick="window.open('https://www.tp-link.com/Support', '_blank')">
+                          <span class="tooltip-trigger-text">SUPPORT</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div id="back-to-top" widget="button" class="inline-block container widget-container button-container" onclick="document.getElementById('pageContentBox').scrollTo({top:0,behavior:'smooth'})">
+                    <div class="widget-wrap-outer button-wrap-outer">
+                      <div class="widget-wrap button-wrap">
+                        <a href="javascript:void(0);" class="button-button" title="BACK TO TOP">
+                          <span class="icon button-icon back-to-top"></span>
+                          <span class="text button-text">BACK TO TOP</span>
+                        </a>
+                      </div>
                     </div>
                   </div>
                 </div>
