@@ -411,7 +411,7 @@
                           <span class="sub-navigator-icon-after"></span>
                         </a>
                       </li>
-                      <li navi-value="networkBasic" class="navigator-li navigator-li-level1 navigator-li-effective" onclick="selectTopMenu('networkBasic', 'net_lan')">
+                      <li navi-value="networkBasic" class="navigator-li navigator-li-level1 navigator-li-effective" onclick="selectTopMenu('networkBasic', 'net_wan')">
                         <a href="javascript:void(0)">
                           <span class="sub-navigator-icon"></span>
                           <span class="sub-navigator-text">Internet</span>
@@ -770,12 +770,12 @@
       }
     ];
 
-    // Exact Internet Sidebar Tree (from navigator.re.json: LAN, DHCP Server, Access Control + WAN)
+    // Exact Internet Sidebar Tree (Internet/PPPoE #networkBasic + LAN #lanAPAdv, DHCP Server, Access Control)
     const INTERNET_MENU_TREE = [
+      { id: "net_wan", title: "Internet (PPPoE / WAN)" },
       { id: "net_lan", title: "LAN" },
       { id: "net_dhcp", title: "DHCP Server" },
-      { id: "sec_access", title: "Access Control" },
-      { id: "net_wan", title: "WAN / ISP Settings" }
+      { id: "sec_access", title: "Access Control" }
     ];
 
     // Custom Hotspot & Pay Menu Tree (bKash, Nagad, Rocket)
@@ -835,7 +835,7 @@
         navSidebar.style.display = "block";
         viewNetmap.style.display = "none";
         viewDyn.style.display = "block";
-        currentSubPage = subId || "net_lan";
+        currentSubPage = subId || "net_wan";
         renderSidebar(INTERNET_MENU_TREE);
         renderSubPageContent();
       } else if (menu === "wirelessBasic") {
@@ -933,23 +933,15 @@
                     <div class="widget-fieldlabel-wrap"><div class="widget-fieldlabel-inner"><label class="widget-fieldlabel text-fieldlabel">MAC Address</label><span class="widget-separator">:</span></div></div>
                     <div class="widget-wrap-outer text-wrap-outer"><div class="widget-wrap text-wrap"><span class="text-wrap-display">${r.macAddress}</span></div></div>
                   </div>
-                  <div class="container widget-container displaylabel-container">
-                    <div class="widget-fieldlabel-wrap"><div class="widget-fieldlabel-inner"><label class="widget-fieldlabel text-fieldlabel">Serial Number</label><span class="widget-separator">:</span></div></div>
-                    <div class="widget-wrap-outer text-wrap-outer"><div class="widget-wrap text-wrap"><span class="text-wrap-display">${r.serialNumber}</span></div></div>
-                  </div>
                 </div>
                 <div class="networkmap-panel-column">
                   <div class="container widget-container displaylabel-container">
                     <div class="widget-fieldlabel-wrap"><div class="widget-fieldlabel-inner"><label class="widget-fieldlabel text-fieldlabel">IPv4 LAN IP</label><span class="widget-separator">:</span></div></div>
-                    <div class="widget-wrap-outer text-wrap-outer"><div class="widget-wrap text-wrap"><span class="text-wrap-display">${r.lanIp}</span></div></div>
+                    <div class="widget-wrap-outer text-wrap-outer"><div class="widget-wrap text-wrap"><span class="text-wrap-display">192.168.0.1</span></div></div>
                   </div>
                   <div class="container widget-container displaylabel-container">
                     <div class="widget-fieldlabel-wrap"><div class="widget-fieldlabel-inner"><label class="widget-fieldlabel text-fieldlabel">IPv6 LAN IP</label><span class="widget-separator">:</span></div></div>
-                    <div class="widget-wrap-outer text-wrap-outer"><div class="widget-wrap text-wrap"><span class="text-wrap-display">${r.ipv6LanIp}</span></div></div>
-                  </div>
-                  <div class="container widget-container displaylabel-container">
-                    <div class="widget-fieldlabel-wrap"><div class="widget-fieldlabel-inner"><label class="widget-fieldlabel text-fieldlabel">Firmware</label><span class="widget-separator">:</span></div></div>
-                    <div class="widget-wrap-outer text-wrap-outer"><div class="widget-wrap text-wrap"><span class="text-wrap-display">${r.firmwareVersion}</span></div></div>
+                    <div class="widget-wrap-outer text-wrap-outer"><div class="widget-wrap text-wrap"><span class="text-wrap-display">${r.ipv6LanIp || "::"}</span></div></div>
                   </div>
                 </div>
               </div>
@@ -1046,7 +1038,7 @@
               <div class="panel-content-container">
                 <div widget="interfaceList" class="widget-container interface-list-container">
                   <ul class="interface-list-wrap">
-                    <li class="interface-list-item connected"><div class="interface-item-wrap"><span class="interface-icon"></span><span class="interface-name">Internet</span><span class="interface-speed-detail">100Mbps</span></div></li>
+                    <li class="interface-list-item disconnected"><div class="interface-item-wrap"><span class="interface-icon"></span><span class="interface-name">Internet</span><span class="interface-speed-detail">---</span></div></li>
                     <li class="interface-list-item disconnected"><div class="interface-item-wrap"><span class="interface-icon"></span><span class="interface-name">LAN 1</span><span class="interface-speed-detail">---</span></div></li>
                     <li class="interface-list-item disconnected"><div class="interface-item-wrap"><span class="interface-icon"></span><span class="interface-name">LAN 2</span><span class="interface-speed-detail">---</span></div></li>
                     <li class="interface-list-item disconnected"><div class="interface-item-wrap"><span class="interface-icon"></span><span class="interface-name">LAN 3</span><span class="interface-speed-detail">---</span></div></li>
@@ -1943,8 +1935,428 @@
             </div>
           </div>
         `;
+      } else if (currentSubPage === "net_wan") {
+        // Exact Internet / WAN (#networkBasic / #wanSettings) page matching user's PPPoE screenshot
+        const connType = r.wanType || "PPPoE";
+        box.innerHTML = `
+          <h2 class="tp-section-title">Internet</h2>
+          <p class="tp-section-subtitle">Set up an internet connection with the service information provided by your ISP (internet service provider).</p>
+
+          <div class="tp-form-row" style="align-items:flex-start;">
+            <label class="tp-form-label" style="padding-top:7px;">Internet Connection Type:</label>
+            <div class="tp-form-value">
+              <select id="wanConnTypeSel" class="tp-select" style="width:260px;" onchange="r.wanType=this.value;renderSubPageContent()">
+                ${["PPPoE", "Dynamic IP", "Static IP", "L2TP", "PPTP"]
+                  .map(t => `<option value="${t}" ${connType === t ? "selected" : ""}>${t}</option>`)
+                  .join("")}
+              </select>
+              ${
+                connType === "PPPoE"
+                  ? `<div style="margin-top:8px;font-size:12.5px;color:#8c98a4;max-width:340px;line-height:1.45;">Select this type if your ISP only provides a username and password.</div>`
+                  : ""
+              }
+            </div>
+          </div>
+
+          ${
+            connType === "PPPoE"
+              ? `
+            <div class="tp-form-row">
+              <label class="tp-form-label">Username:</label>
+              <div class="tp-form-value">
+                <input id="wanPppoeUser" class="tp-input" style="width:260px;" value="${r.pppoeUser || "gm-masud1"}" />
+              </div>
+            </div>
+            <div class="tp-form-row">
+              <label class="tp-form-label">Password:</label>
+              <div class="tp-form-value" style="position:relative;width:260px;">
+                <input id="wanPppoePass" type="password" class="tp-input" style="width:260px;padding-right:34px;" value="${r.pppoePass || "12345678"}" />
+                <span onclick="const p=document.getElementById('wanPppoePass');p.type=p.type==='password'?'text':'password';" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);cursor:pointer;color:#9aa5b1;" title="Show/Hide Password">👁</span>
+              </div>
+            </div>
+          `
+              : `
+            <div class="tp-form-row">
+              <label class="tp-form-label">IP Address:</label>
+              <div class="tp-form-value"><input id="wanIpInp" class="tp-input" style="width:260px;" value="${r.wanIp}" /></div>
+            </div>
+            <div class="tp-form-row">
+              <label class="tp-form-label">Subnet Mask:</label>
+              <div class="tp-form-value"><input id="wanMaskInp" class="tp-input" style="width:260px;" value="${r.subnetMask}" /></div>
+            </div>
+            <div class="tp-form-row">
+              <label class="tp-form-label">Default Gateway:</label>
+              <div class="tp-form-value"><input id="wanGwInp" class="tp-input" style="width:260px;" value="${r.wanGateway}" /></div>
+            </div>
+            <div class="tp-form-row">
+              <label class="tp-form-label">Primary DNS:</label>
+              <div class="tp-form-value"><input id="wanDnsInp" class="tp-input" style="width:260px;" value="${r.dns1}" /></div>
+            </div>
+          `
+          }
+
+          <div class="tp-form-row" style="margin-top:26px;">
+            <label class="tp-form-label"></label>
+            <div class="tp-form-value">
+              <button class="tp-btn tp-btn-wide" onclick="if(document.getElementById('wanPppoeUser')){r.pppoeUser=document.getElementById('wanPppoeUser').value.trim();r.pppoePass=document.getElementById('wanPppoePass').value;}saveHotspotState(state);showToast('Operation succeeded.')">SAVE</button>
+            </div>
+          </div>
+        `;
+      } else if (currentSubPage === "sys_led") {
+        // Exact LED Control (#led) page matching user's screenshot & modules/advanced/system/led/view.html
+        box.innerHTML = `
+          <h2 class="tp-section-title">LED Control</h2>
+          <p class="tp-section-subtitle">Turn the router's LEDs on or off.</p>
+
+          <div class="tp-form-row" style="margin:26px 0 36px;">
+            <label class="tp-form-label">LED Status:</label>
+            <div class="tp-form-value">
+              <div widget="switch" class="em container widget-container switch-container" onclick="r.ledEnabled=!r.ledEnabled;saveHotspotState(state);renderSubPageContent();showToast('LED Status '+(r.ledEnabled?'ON':'OFF'))" style="display:inline-block;">
+                <div class="widget-wrap-outer switch-wrap-outer"><div class="switch-wrap"><div class="widget-wrap"><label class="switch-label ${r.ledEnabled !== false ? "checked" : ""}"><span class="icon-bg"></span><span class="icon-ball"></span></label></div></div></div>
+              </div>
+            </div>
+          </div>
+
+          <h2 class="tp-section-title">Night Mode</h2>
+          <p class="tp-section-subtitle">Set a time period when the LEDs will be off automatically.</p>
+
+          <div class="tp-form-row" style="margin-top:22px;">
+            <label class="tp-form-label" style="font-weight:700;">Night Mode:</label>
+            <div class="tp-form-value">
+              <label style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;">
+                <input type="checkbox" ${r.ledNightMode ? "checked" : ""} onchange="r.ledNightMode=this.checked;saveHotspotState(state);renderSubPageContent();showToast('Night Mode '+(r.ledNightMode?'Enabled':'Disabled'))" style="width:16px;height:16px;accent-color:#4acbd6;" />
+                <span>Enable</span>
+              </label>
+            </div>
+          </div>
+
+          ${
+            r.ledNightMode
+              ? `
+            <div class="tp-form-row" style="margin-top:14px;">
+              <label class="tp-form-label">Night Mode Period:</label>
+              <div class="tp-form-value" style="display:flex;align-items:center;gap:10px;">
+                <span>From:</span>
+                <input type="time" class="tp-input" style="width:130px;" value="${r.ledNightStart || "22:00"}" onchange="r.ledNightStart=this.value;saveHotspotState(state);" />
+                <span>To:</span>
+                <input type="time" class="tp-input" style="width:130px;" value="${r.ledNightEnd || "06:00"}" onchange="r.ledNightEnd=this.value;saveHotspotState(state);" />
+                <span style="font-size:12px;color:#76838f;">(Every day)</span>
+              </div>
+            </div>
+            <div class="tp-form-row" style="margin-top:20px;">
+              <label class="tp-form-label"></label>
+              <div class="tp-form-value"><button class="tp-btn" onclick="saveHotspotState(state);showToast('Operation succeeded.')">SAVE</button></div>
+            </div>
+          `
+              : ""
+          }
+        `;
+      } else if (currentSubPage === "net_routing") {
+        // Exact Static Routing & Routing Table (#routingAdv) from modules/advanced/network/routingAdv/view.html
+        box.innerHTML = `
+          <h2 class="tp-section-title">Static Routing</h2>
+          <p class="tp-section-subtitle">A static route is a pre-determined path that network information must travel to reach a specific host or network.</p>
+          <div class="tp-table-wrap" style="margin-bottom:28px;">
+            <table class="tp-table">
+              <thead>
+                <tr><th>Network Destination</th><th>Subnet Mask</th><th>Default Gateway</th><th>Interface</th><th>Description</th><th>Status</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>192.168.0.0</td><td>255.255.255.0</td><td>192.168.0.1</td><td>WAN / Host</td><td>Upstream Gateway Route</td><td><span class="tp-badge tp-badge-success">Enabled</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h2 class="tp-section-title">System Routing Table</h2>
+          <p class="tp-section-subtitle">System routing table lists all valid route entries in use.</p>
+          <div class="tp-table-wrap">
+            <table class="tp-table">
+              <thead>
+                <tr><th>ID</th><th>Network Destination</th><th>Subnet Mask</th><th>Gateway</th><th>Interface</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>1</td><td>0.0.0.0</td><td>0.0.0.0</td><td>192.168.0.1</td><td>WAN</td></tr>
+                <tr><td>2</td><td>192.168.0.0</td><td>255.255.255.0</td><td>0.0.0.0</td><td>LAN &amp; WLAN</td></tr>
+              </tbody>
+            </table>
+          </div>
+        `;
+      } else if (currentSubPage === "wl_settings") {
+        // Exact Wireless Settings (#hostNwAdv) from modules/advanced/wireless/hostNwAdv/view.html
+        box.innerHTML = `
+          <h2 class="tp-section-title">Wireless Settings</h2>
+          <p class="tp-section-subtitle">Personalize the detailed 2.4GHz and 5GHz wireless settings of your Archer C24.</p>
+          <div class="tp-form-row">
+            <label class="tp-form-label">Smart Connect:</label>
+            <div class="tp-form-value"><label><input type="checkbox" ${r.smartConnect ? "checked" : ""} onchange="r.smartConnect=this.checked" /> Enable Smart Connect</label></div>
+          </div>
+          <hr style="border:none;border-top:1px solid #e5e9ec;margin:18px 0;" />
+          <h3 style="font-size:15px;color:#00a8e8;margin-bottom:12px;">2.4GHz Wireless</h3>
+          <div class="tp-form-row"><label class="tp-form-label">Network Name (SSID):</label><div class="tp-form-value"><input id="advSsid24" class="tp-input" value="${r.ssid24}" /></div></div>
+          <div class="tp-form-row"><label class="tp-form-label">Security:</label><div class="tp-form-value"><select class="tp-select"><option selected>WPA/WPA2-Personal (Recommended)</option><option>WPA2/WPA3-Personal</option><option>None</option></select></div></div>
+          <div class="tp-form-row"><label class="tp-form-label">Password:</label><div class="tp-form-value"><input id="advPass24" class="tp-input" value="${r.pass24}" /></div></div>
+          <div class="tp-form-row"><label class="tp-form-label">Channel:</label><div class="tp-form-value"><input class="tp-input" value="${r.channel24}" readonly /></div></div>
+          <div class="tp-form-row"><label class="tp-form-label">Channel Width:</label><div class="tp-form-value"><select class="tp-select"><option selected>Auto</option><option>20MHz</option><option>40MHz</option></select></div></div>
+          <div class="tp-form-row"><label class="tp-form-label">Transmit Power:</label><div class="tp-form-value"><select class="tp-select"><option selected>High</option><option>Middle</option><option>Low</option></select></div></div>
+
+          <hr style="border:none;border-top:1px solid #e5e9ec;margin:18px 0;" />
+          <h3 style="font-size:15px;color:#00a8e8;margin-bottom:12px;">5GHz Wireless</h3>
+          <div class="tp-form-row"><label class="tp-form-label">Network Name (SSID):</label><div class="tp-form-value"><input id="advSsid5" class="tp-input" value="${r.ssid5}" /></div></div>
+          <div class="tp-form-row"><label class="tp-form-label">Password:</label><div class="tp-form-value"><input id="advPass5" class="tp-input" value="${r.pass5}" /></div></div>
+          <div class="tp-form-row"><label class="tp-form-label">Channel:</label><div class="tp-form-value"><input class="tp-input" value="${r.channel5}" readonly /></div></div>
+          <div class="tp-form-row"><label class="tp-form-label">Channel Width:</label><div class="tp-form-value"><select class="tp-select"><option selected>80MHz</option><option>40MHz</option><option>20MHz</option></select></div></div>
+          <div class="tp-form-row" style="margin-top:22px;"><label class="tp-form-label"></label><div class="tp-form-value"><button class="tp-btn tp-btn-wide" onclick="r.ssid24=document.getElementById('advSsid24').value;r.pass24=document.getElementById('advPass24').value;r.ssid5=document.getElementById('advSsid5').value;r.pass5=document.getElementById('advPass5').value;saveHotspotState(state);showToast('Operation succeeded.')">SAVE</button></div></div>
+        `;
+      } else if (currentSubPage === "wl_guest") {
+        // Exact Guest Network (#guestNetworkAdv) from modules/advanced/wireless/guestNetworkAdv/view.html
+        box.innerHTML = `
+          <h2 class="tp-section-title">Guest Network</h2>
+          <p class="tp-section-subtitle">Create a separate network for your guests to ensure the security and privacy of your main network.</p>
+          <div class="tp-form-row"><label class="tp-form-label">2.4GHz Guest Network:</label><div class="tp-form-value"><label><input type="checkbox" ${r.guest24Enable ? "checked" : ""} onchange="r.guest24Enable=this.checked" /> Enable</label></div></div>
+          <div class="tp-form-row"><label class="tp-form-label">2.4GHz Network Name (SSID):</label><div class="tp-form-value"><input id="gnSsid24" class="tp-input" value="${r.guest24Ssid}" /></div></div>
+          <div class="tp-form-row"><label class="tp-form-label">5GHz Guest Network:</label><div class="tp-form-value"><label><input type="checkbox" ${r.guest5Enable ? "checked" : ""} onchange="r.guest5Enable=this.checked" /> Enable</label></div></div>
+          <div class="tp-form-row"><label class="tp-form-label">5GHz Network Name (SSID):</label><div class="tp-form-value"><input id="gnSsid5" class="tp-input" value="${r.guest5Ssid}" /></div></div>
+          <hr style="border:none;border-top:1px solid #e5e9ec;margin:20px 0;" />
+          <h3 class="tp-section-title" style="font-size:16px;">Guest Permissions</h3>
+          <p class="tp-section-subtitle">Control the data that guests can access.</p>
+          <div class="tp-form-row"><label class="tp-form-label"></label><div class="tp-form-value"><label><input type="checkbox" ${r.guestAllowLan ? "checked" : ""} onchange="r.guestAllowLan=this.checked" /> Allow guests to see each other</label></div></div>
+          <div class="tp-form-row"><label class="tp-form-label"></label><div class="tp-form-value"><label><input type="checkbox" ${r.guestIsolation ? "checked" : ""} onchange="r.guestIsolation=this.checked" /> Allow guests to access my local network</label></div></div>
+          <div class="tp-form-row" style="margin-top:20px;"><label class="tp-form-label"></label><div class="tp-form-value"><button class="tp-btn tp-btn-wide" onclick="r.guest24Ssid=document.getElementById('gnSsid24').value;r.guest5Ssid=document.getElementById('gnSsid5').value;saveHotspotState(state);showToast('Operation succeeded.')">SAVE</button></div></div>
+        `;
+      } else if (currentSubPage === "wl_additional") {
+        // Exact Additional Settings (#additionalSettings) from modules/advanced/wireless/additionalSettings/view.html
+        box.innerHTML = `
+          <h2 class="tp-section-title">Additional Settings</h2>
+          <p class="tp-section-subtitle">Check advanced wireless features of your router.</p>
+          <div class="tp-form-row"><label class="tp-form-label">WMM:</label><div class="tp-form-value"><label><input type="checkbox" checked /> Enable</label></div></div>
+          <div class="tp-form-row"><label class="tp-form-label">Short GI:</label><div class="tp-form-value"><label><input type="checkbox" checked /> Enable</label></div></div>
+          <div class="tp-form-row"><label class="tp-form-label">AP Isolation:</label><div class="tp-form-value"><label><input type="checkbox" /> Enable</label></div></div>
+          <div class="tp-form-row"><label class="tp-form-label">Beacon Interval:</label><div class="tp-form-value"><input class="tp-input" style="width:140px;" value="100" /> (40-1000)</div></div>
+          <div class="tp-form-row"><label class="tp-form-label">RTS Threshold:</label><div class="tp-form-value"><input class="tp-input" style="width:140px;" value="2346" /> (1-2346)</div></div>
+          <div class="tp-form-row"><label class="tp-form-label">DTIM Interval:</label><div class="tp-form-value"><input class="tp-input" style="width:140px;" value="1" /> (1-15)</div></div>
+          <div class="tp-form-row"><label class="tp-form-label">Group Key Update Period:</label><div class="tp-form-value"><input class="tp-input" style="width:140px;" value="0" /> s</div></div>
+          <div class="tp-form-row" style="margin-top:22px;"><label class="tp-form-label"></label><div class="tp-form-value"><button class="tp-btn tp-btn-wide" onclick="saveHotspotState(state);showToast('Operation succeeded.')">SAVE</button></div></div>
+        `;
+      } else if (currentSubPage === "nat_pf") {
+        // Exact Port Forwarding (#portForwarding) from modules/advanced/nat/portForwarding/view.html
+        box.innerHTML = `
+          <h2 class="tp-section-title">Port Forwarding</h2>
+          <p class="tp-section-subtitle">Specify ports for some applications to work through the NAT router.</p>
+          <div class="tp-table-wrap">
+            <table class="tp-table">
+              <thead>
+                <tr><th>Service Name</th><th>Device IP Address</th><th>External Port</th><th>Internal Port</th><th>Protocol</th><th>Status</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>HTTP_Hotspot_Portal</td><td>192.168.0.102</td><td>8080</td><td>3000</td><td>TCP</td><td><span class="tp-badge tp-badge-success">Enabled</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        `;
+      } else if (currentSubPage === "nat_alg") {
+        // Exact ALG (#alg) from modules/advanced/security/alg/view.html
+        box.innerHTML = `
+          <h2 class="tp-section-title">ALG (Application Layer Gateway)</h2>
+          <p class="tp-section-subtitle">View and configure Application Layer Gateway (ALG) settings.</p>
+          ${["PPTP Pass-through", "L2TP Pass-through", "IPSec Pass-through", "FTP ALG", "TFTP ALG", "RTSP ALG", "H323 ALG"]
+            .map(
+              lbl => `
+            <div class="tp-form-row">
+              <label class="tp-form-label">${lbl}:</label>
+              <div class="tp-form-value">
+                <div widget="switch" class="em container widget-container switch-container" onclick="this.querySelector('.switch-label').classList.toggle('checked');showToast('Operation succeeded.')" style="display:inline-block;">
+                  <div class="widget-wrap-outer switch-wrap-outer"><div class="switch-wrap"><div class="widget-wrap"><label class="switch-label checked"><span class="icon-bg"></span><span class="icon-ball"></span></label></div></div></div>
+                </div>
+              </div>
+            </div>
+          `
+            )
+            .join("")}
+        `;
+      } else if (currentSubPage === "adv_qos") {
+        // Exact QoS (#qos) from modules/homecare/view.html
+        box.innerHTML = `
+          <h2 class="tp-section-title">Global Settings (QoS)</h2>
+          <p class="tp-section-subtitle">Prioritize internet traffic of specific devices to guarantee a faster connection when you need it the most.</p>
+          <div class="tp-form-row"><label class="tp-form-label">QoS:</label><div class="tp-form-value"><label><input type="checkbox" ${r.qosEnable ? "checked" : ""} onchange="r.qosEnable=this.checked" /> Enable QoS</label></div></div>
+          <div class="tp-form-row"><label class="tp-form-label">Upload Bandwidth:</label><div class="tp-form-value"><input id="qosUpInp" type="number" class="tp-input" style="width:140px;" value="${r.qosUpMbps || 100}" /> Mbps</div></div>
+          <div class="tp-form-row"><label class="tp-form-label">Download Bandwidth:</label><div class="tp-form-value"><input id="qosDownInp" type="number" class="tp-input" style="width:140px;" value="${r.qosDownMbps || 100}" /> Mbps</div></div>
+          <div class="tp-form-row" style="margin-top:20px;"><label class="tp-form-label"></label><div class="tp-form-value"><button class="tp-btn tp-btn-wide" onclick="r.qosUpMbps=Number(document.getElementById('qosUpInp').value);r.qosDownMbps=Number(document.getElementById('qosDownInp').value);saveHotspotState(state);showToast('Operation succeeded.')">SAVE</button></div></div>
+        `;
+      } else if (currentSubPage === "adv_parental") {
+        // Exact Parental Controls (#parentalControls) from modules/homecare/view.html
+        box.innerHTML = `
+          <h2 class="tp-section-title">Parental Controls</h2>
+          <p class="tp-section-subtitle">Filter content, limit time spent online, and check internet history for your family's devices.</p>
+          <div class="tp-table-wrap">
+            <table class="tp-table">
+              <thead><tr><th>Profile Name</th><th>Devices</th><th>Time Limits</th><th>Bedtime</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>Kids / Guest Filter</td><td>1 Device</td><td>2 Hours / Day</td><td>11:00 PM - 6:00 AM</td><td><span class="tp-badge tp-badge-success">Active</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        `;
+      } else if (currentSubPage === "sec_firewall") {
+        // Exact Firewall (#firewall) from modules/advanced/security/firewall/view.html
+        box.innerHTML = `
+          <h2 class="tp-section-title">Firewall</h2>
+          <p class="tp-section-subtitle">Check the firewall settings to protect your network from cyber attacks.</p>
+          <div class="tp-form-row">
+            <label class="tp-form-label">SPI Firewall:</label>
+            <div class="tp-form-value">
+              <div widget="switch" class="em container widget-container switch-container" onclick="r.spiFirewall=!r.spiFirewall;saveHotspotState(state);renderSubPageContent();showToast('SPI Firewall Updated')" style="display:inline-block;">
+                <div class="widget-wrap-outer switch-wrap-outer"><div class="switch-wrap"><div class="widget-wrap"><label class="switch-label ${r.spiFirewall !== false ? "checked" : ""}"><span class="icon-bg"></span><span class="icon-ball"></span></label></div></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="tp-form-row">
+            <label class="tp-form-label">Respond to Pings from LAN:</label>
+            <div class="tp-form-value">
+              <div widget="switch" class="em container widget-container switch-container" onclick="this.querySelector('.switch-label').classList.toggle('checked');showToast('Operation succeeded.')" style="display:inline-block;">
+                <div class="widget-wrap-outer switch-wrap-outer"><div class="switch-wrap"><div class="widget-wrap"><label class="switch-label checked"><span class="icon-bg"></span><span class="icon-ball"></span></label></div></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="tp-form-row">
+            <label class="tp-form-label">Respond to Pings from WAN:</label>
+            <div class="tp-form-value">
+              <div widget="switch" class="em container widget-container switch-container" onclick="this.querySelector('.switch-label').classList.toggle('checked');showToast('Operation succeeded.')" style="display:inline-block;">
+                <div class="widget-wrap-outer switch-wrap-outer"><div class="switch-wrap"><div class="widget-wrap"><label class="switch-label"><span class="icon-bg"></span><span class="icon-ball"></span></label></div></div></div>
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (currentSubPage === "sec_binding") {
+        // Exact IP & MAC Binding (#IPMACBinding) from modules/advanced/security/IPMAC/view.html
+        box.innerHTML = `
+          <h2 class="tp-section-title">IP &amp; MAC Binding</h2>
+          <p class="tp-section-subtitle">Bind a specific device's MAC address to an IP address to prevent ARP spoofing and other attacks.</p>
+          <div class="tp-form-row">
+            <label class="tp-form-label">IP &amp; MAC Binding:</label>
+            <div class="tp-form-value">
+              <div widget="switch" class="em container widget-container switch-container" onclick="this.querySelector('.switch-label').classList.toggle('checked');showToast('Operation succeeded.')" style="display:inline-block;">
+                <div class="widget-wrap-outer switch-wrap-outer"><div class="switch-wrap"><div class="widget-wrap"><label class="switch-label checked"><span class="icon-bg"></span><span class="icon-ball"></span></label></div></div></div>
+              </div>
+            </div>
+          </div>
+          <h3 style="font-size:15px;margin:20px 0 10px;">ARP List</h3>
+          <div class="tp-table-wrap">
+            <table class="tp-table">
+              <thead><tr><th>Device Name</th><th>MAC Address</th><th>IP Address</th><th>Bound</th></tr></thead>
+              <tbody>
+                ${state.connectedClients
+                  .map(
+                    c => `
+                  <tr><td>${c.hostname}</td><td>${c.mac}</td><td>${c.ip}</td><td><span class="tp-badge tp-badge-success">Bound</span></td></tr>
+                `
+                  )
+                  .join("")}
+              </tbody>
+            </table>
+          </div>
+        `;
+      } else if (currentSubPage === "adv_ipv6") {
+        // Exact IPv6 (#ipv6Adv) from modules/advanced/network/ipv6Adv/view.html
+        box.innerHTML = `
+          <h2 class="tp-section-title">IPv6</h2>
+          <p class="tp-section-subtitle">Set up an IPv6 connection according to your ISP's information.</p>
+          <div class="tp-form-row"><label class="tp-form-label">IPv6:</label><div class="tp-form-value"><label><input type="checkbox" ${r.ipv6Enable ? "checked" : ""} onchange="r.ipv6Enable=this.checked" /> Enable IPv6</label></div></div>
+          <div class="tp-form-row"><label class="tp-form-label">Mode:</label><div class="tp-form-value"><select class="tp-select"><option selected>Router</option><option>Pass-Through (Bridge)</option></select></div></div>
+          <div class="tp-form-row"><label class="tp-form-label">WAN Connection Type:</label><div class="tp-form-value"><select class="tp-select"><option selected>Dynamic IP (SLAAC/DHCPv6)</option><option>Static IP</option><option>PPPoEv6</option></select></div></div>
+          <div class="tp-form-row"><label class="tp-form-label">LAN IPv6 Link-Local:</label><div class="tp-form-value">${r.ipv6LanIp || "::"}</div></div>
+          <div class="tp-form-row" style="margin-top:20px;"><label class="tp-form-label"></label><div class="tp-form-value"><button class="tp-btn tp-btn-wide" onclick="saveHotspotState(state);showToast('Operation succeeded.')">SAVE</button></div></div>
+        `;
+      } else if (currentSubPage === "sys_time") {
+        // Exact Time & Language (#timeSettings) from modules/advanced/system/timeSettings/view.html
+        box.innerHTML = `
+          <h2 class="tp-section-title">System Time</h2>
+          <p class="tp-section-subtitle">Set the router's system time when various time-based functions will take effect.</p>
+          <div class="tp-form-row"><label class="tp-form-label">Current Time:</label><div class="tp-form-value">${new Date().toLocaleString()}</div></div>
+          <div class="tp-form-row"><label class="tp-form-label">24-Hour Time:</label><div class="tp-form-value"><label><input type="checkbox" checked /> Enable</label></div></div>
+          <div class="tp-form-row"><label class="tp-form-label">Set Time:</label><div class="tp-form-value"><select class="tp-select"><option selected>Get from the Internet</option><option>Manually</option></select></div></div>
+          <div class="tp-form-row"><label class="tp-form-label">Time Zone:</label><div class="tp-form-value"><select class="tp-select" style="width:320px;"><option selected>(GMT+06:00) Dhaka, Astana</option><option>(GMT+00:00) UTC</option></select></div></div>
+          <div class="tp-form-row"><label class="tp-form-label">NTP Server I:</label><div class="tp-form-value"><input class="tp-input" value="time.nist.gov" /></div></div>
+          <div class="tp-form-row"><label class="tp-form-label">NTP Server II:</label><div class="tp-form-value"><input class="tp-input" value="time-nw.nist.gov" /></div></div>
+          <div class="tp-form-row" style="margin-top:20px;"><label class="tp-form-label"></label><div class="tp-form-value"><button class="tp-btn tp-btn-wide" onclick="saveHotspotState(state);showToast('Operation succeeded.')">SAVE</button></div></div>
+        `;
+      } else if (currentSubPage === "sys_reboot") {
+        // Exact Reboot (#reboot) from modules/advanced/system/reboot/view.html
+        box.innerHTML = `
+          <h2 class="tp-section-title">Reboot</h2>
+          <p class="tp-section-subtitle">Reboot the router to clear cache and enhance running performance.</p>
+          <div style="margin:20px 0 32px;">
+            <button class="tp-btn tp-btn-wide" onclick="if(confirm('Are you sure you want to reboot the router?')){showToast('Rebooting Archer C24 (Simulated safe reboot)...')}">REBOOT</button>
+          </div>
+          <h2 class="tp-section-title">Reboot Schedule</h2>
+          <p class="tp-section-subtitle">Set when and how often the router reboots automatically.</p>
+          <div class="tp-form-row"><label class="tp-form-label">Reboot Schedule:</label><div class="tp-form-value"><label><input type="checkbox" /> Enable</label></div></div>
+        `;
+      } else if (currentSubPage === "sys_diag") {
+        // Exact Diagnostics (#diagnostics) from modules/advanced/system/diagnostics/view.html
+        box.innerHTML = `
+          <h2 class="tp-section-title">Diagnostics</h2>
+          <p class="tp-section-subtitle">Troubleshoot network connection problems using the Ping or Traceroute utility.</p>
+          <div class="tp-form-row"><label class="tp-form-label">Diagnostic Tool:</label><div class="tp-form-value"><select id="diagToolSel" class="tp-select"><option value="Ping" selected>Ping</option><option value="Traceroute">Traceroute</option></select></div></div>
+          <div class="tp-form-row"><label class="tp-form-label">IP Address/Domain Name:</label><div class="tp-form-value"><input id="diagHostInp" class="tp-input" value="192.168.0.1" /></div></div>
+          <div class="tp-form-row"><label class="tp-form-label"></label><div class="tp-form-value"><button class="tp-btn tp-btn-wide" onclick="document.getElementById('diagOutputBox').textContent='Pinging '+document.getElementById('diagHostInp').value+' with 64 bytes of data:\\nReply from '+document.getElementById('diagHostInp').value+': bytes=64 time=1ms TTL=64\\nReply from '+document.getElementById('diagHostInp').value+': bytes=64 time=1ms TTL=64\\n--- Ping statistics ---\\n4 packets transmitted, 4 packets received, 0% packet loss';showToast('Diagnostic complete.')">START</button></div></div>
+          <pre id="diagOutputBox" style="margin-top:16px;background:#f8fafc;border:1px solid #e5e9ec;border-radius:6px;padding:14px;font-family:Consolas,monospace;font-size:12.5px;min-height:140px;color:#36444b;">Ready to start diagnostic test on Archer C24 (192.168.0.101 / 192.168.0.1).</pre>
+        `;
+      } else if (currentSubPage === "net_ddns") {
+        box.innerHTML = `
+          <h2 class="tp-section-title">Dynamic DNS</h2>
+          <p class="tp-section-subtitle">Assign a fixed host and domain name to a dynamic Internet IP address.</p>
+          <div class="tp-form-row"><label class="tp-form-label">Service Provider:</label><div class="tp-form-value"><select class="tp-select"><option selected>TP-Link</option><option>NO-IP</option><option>DynDNS</option></select></div></div>
+          <div class="tp-form-row"><label class="tp-form-label">Domain Name:</label><div class="tp-form-value"><input class="tp-input" value="archerc24.tplinkdns.com" /></div></div>
+          <div class="tp-form-row" style="margin-top:20px;"><label class="tp-form-label"></label><div class="tp-form-value"><button class="tp-btn tp-btn-wide" onclick="saveHotspotState(state);showToast('Operation succeeded.')">SAVE</button></div></div>
+        `;
+      } else if (currentSubPage === "net_iptv") {
+        box.innerHTML = `
+          <h2 class="tp-section-title">IPTV/VLAN</h2>
+          <p class="tp-section-subtitle">Configure IPTV and VLAN settings if your ISP provides IPTV service.</p>
+          <div class="tp-form-row"><label class="tp-form-label">IGMP Proxy:</label><div class="tp-form-value"><label><input type="checkbox" checked /> Enable</label></div></div>
+          <div class="tp-form-row"><label class="tp-form-label">IGMP Snooping:</label><div class="tp-form-value"><label><input type="checkbox" checked /> Enable</label></div></div>
+          <div class="tp-form-row"><label class="tp-form-label">IPTV/VLAN:</label><div class="tp-form-value"><label><input type="checkbox" /> Enable</label></div></div>
+          <div class="tp-form-row" style="margin-top:20px;"><label class="tp-form-label"></label><div class="tp-form-value"><button class="tp-btn tp-btn-wide" onclick="saveHotspotState(state);showToast('Operation succeeded.')">SAVE</button></div></div>
+        `;
+      } else if (currentSubPage === "wl_schedule") {
+        box.innerHTML = `
+          <h2 class="tp-section-title">Wireless Schedule</h2>
+          <p class="tp-section-subtitle">Schedule when the wireless network will automatically turn off.</p>
+          <div class="tp-form-row"><label class="tp-form-label">Wireless Schedule:</label><div class="tp-form-value"><label><input type="checkbox" /> Enable</label></div></div>
+          <div class="tp-form-row" style="margin-top:20px;"><label class="tp-form-label"></label><div class="tp-form-value"><button class="tp-btn tp-btn-wide" onclick="saveHotspotState(state);showToast('Operation succeeded.')">SAVE</button></div></div>
+        `;
+      } else if (currentSubPage === "wl_wps") {
+        box.innerHTML = `
+          <h2 class="tp-section-title">WPS (Wi-Fi Protected Setup)</h2>
+          <p class="tp-section-subtitle">Use WPS to quickly and securely connect a device to the router's network.</p>
+          <div class="tp-form-row"><label class="tp-form-label">WPS:</label><div class="tp-form-value"><div widget="switch" class="em container widget-container switch-container" onclick="this.querySelector('.switch-label').classList.toggle('checked');showToast('Operation succeeded.')" style="display:inline-block;"><div class="widget-wrap-outer switch-wrap-outer"><div class="switch-wrap"><div class="widget-wrap"><label class="switch-label checked"><span class="icon-bg"></span><span class="icon-ball"></span></label></div></div></div></div></div></div>
+          <div class="tp-form-row"><label class="tp-form-label">Router's PIN:</label><div class="tp-form-value"><strong>12345670</strong></div></div>
+        `;
+      } else if (currentSubPage === "nat_pt") {
+        box.innerHTML = `
+          <h2 class="tp-section-title">Port Triggering</h2>
+          <p class="tp-section-subtitle">Specify triggering ports and corresponding external ports to open for applications.</p>
+          <div class="tp-table-wrap"><table class="tp-table"><thead><tr><th>Application</th><th>Triggering Port</th><th>Triggering Protocol</th><th>External Port</th><th>External Protocol</th><th>Status</th></tr></thead><tbody><tr><td colspan="6" style="text-align:center;color:#8c98a4;">No Entries in this table.</td></tr></tbody></table></div>
+        `;
+      } else if (currentSubPage === "nat_upnp") {
+        box.innerHTML = `
+          <h2 class="tp-section-title">UPnP</h2>
+          <p class="tp-section-subtitle">Allow applications or host devices to automatically open ports to communicate with the internet.</p>
+          <div class="tp-form-row"><label class="tp-form-label">UPnP:</label><div class="tp-form-value"><div widget="switch" class="em container widget-container switch-container" onclick="this.querySelector('.switch-label').classList.toggle('checked');showToast('Operation succeeded.')" style="display:inline-block;"><div class="widget-wrap-outer switch-wrap-outer"><div class="switch-wrap"><div class="widget-wrap"><label class="switch-label checked"><span class="icon-bg"></span><span class="icon-ball"></span></label></div></div></div></div></div></div>
+          <h3 style="font-size:15px;margin:20px 0 10px;">UPnP Service List</h3>
+          <div class="tp-table-wrap"><table class="tp-table"><thead><tr><th>ID</th><th>Service Description</th><th>External Port</th><th>Protocol</th><th>Internal IP Address</th><th>Internal Port</th></tr></thead><tbody><tr><td>1</td><td>Archer_C24_Media</td><td>1900</td><td>UDP</td><td>192.168.0.102</td><td>1900</td></tr></tbody></table></div>
+        `;
+      } else if (currentSubPage === "nat_dmz") {
+        box.innerHTML = `
+          <h2 class="tp-section-title">DMZ</h2>
+          <p class="tp-section-subtitle">Open all ports for a specific device on your local network.</p>
+          <div class="tp-form-row"><label class="tp-form-label">DMZ:</label><div class="tp-form-value"><label><input type="checkbox" /> Enable DMZ</label></div></div>
+          <div class="tp-form-row"><label class="tp-form-label">DMZ Host IP Address:</label><div class="tp-form-value"><input class="tp-input" value="192.168.0.102" /></div></div>
+          <div class="tp-form-row" style="margin-top:20px;"><label class="tp-form-label"></label><div class="tp-form-value"><button class="tp-btn tp-btn-wide" onclick="saveHotspotState(state);showToast('Operation succeeded.')">SAVE</button></div></div>
+        `;
       } else {
-        // Generic handler for all remaining Advanced pages (LAN, DDNS, IPTV, Static Routing, Guest, Schedule, WPS, NAT, Parental, QoS, Security, IPv6, Admin, Diag, Time, Reboot, LED)
+        // Generic handler for any remaining Advanced pages
         box.innerHTML = `
           <h2 class="tp-section-title">${currentSubPage.replace(/^[a-z]+_/, "").toUpperCase()} Settings</h2>
           <p class="tp-section-subtitle">Configure ${currentSubPage} parameters on Archer C24 (${r.hardwareVersion}).</p>
