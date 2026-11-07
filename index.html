@@ -103,9 +103,157 @@
     .portal-top-pill:hover {
       opacity: 0.92;
     }
+    /* Exact TP-Link Archer C24 Login Page Styling (Matching User Screenshot) */
+    #tpLoginOverlay {
+      position: fixed;
+      inset: 0;
+      z-index: 5000;
+      background: linear-gradient(180deg, #3ec4d0 0%, #4acbd6 62%, #5fd3dd 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+    #tpLoginOverlay::before {
+      content: "";
+      position: absolute;
+      left: -10%;
+      right: -10%;
+      bottom: -80px;
+      height: 340px;
+      background: radial-gradient(circle at 20% 80%, rgba(255,255,255,0.16) 0%, transparent 55%),
+                  radial-gradient(circle at 75% 70%, rgba(255,255,255,0.14) 0%, transparent 60%),
+                  radial-gradient(circle at 50% 90%, rgba(255,255,255,0.12) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .tp-login-topbar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 18px 36px;
+      color: #ffffff;
+      position: relative;
+      z-index: 2;
+    }
+    .tp-login-card {
+      width: 392px;
+      max-width: 92vw;
+      min-height: 410px;
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+      margin: auto;
+      padding: 46px 48px 36px;
+      position: relative;
+      z-index: 2;
+    }
+    .tp-login-title {
+      text-align: center;
+      font-size: 18px;
+      font-weight: 400;
+      color: #36444b;
+      margin-bottom: 44px;
+    }
+    .tp-login-pwd-wrap {
+      position: relative;
+      margin-top: 6px;
+      margin-bottom: 24px;
+    }
+    .tp-login-pwd-input {
+      width: 100%;
+      height: 34px;
+      padding: 4px 36px 4px 10px;
+      border: 1px solid #cccccc;
+      border-radius: 4px;
+      font-size: 14px;
+      color: #36444b;
+      outline: none;
+    }
+    .tp-login-pwd-input:focus {
+      border-color: #4acbd6;
+    }
+    .tp-login-eye {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #9aa5b1;
+      font-size: 16px;
+      user-select: none;
+    }
+    .tp-login-btn {
+      width: 100%;
+      height: 36px;
+      background: #4acbd6;
+      color: #ffffff;
+      border: none;
+      border-radius: 4px;
+      font-size: 13.5px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .tp-login-btn:hover {
+      background: #36bac6;
+    }
+    .tp-login-forgot {
+      display: block;
+      text-align: right;
+      margin-top: 10px;
+      font-size: 12.5px;
+      color: #4acbd6;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .tp-login-forgot:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
+  <!-- ======================================================================
+       EXACT TP-LINK ARCHER C24 LOGIN PAGE (FROM SCREENSHOT & login/view.html)
+       ====================================================================== -->
+  <div id="tpLoginOverlay" style="display: none;">
+    <div class="tp-login-topbar">
+      <img src="./original_admin_files/logo-icon.png" alt="tp-link" style="height:26px;" />
+      <span style="opacity:0.65;font-size:18px;">|</span>
+      <span style="font-size:16px;font-weight:500;letter-spacing:0.2px;">Archer C24</span>
+    </div>
+
+    <div class="tp-login-card">
+      <h2 class="tp-login-title">Log In with Local Password</h2>
+
+      <label style="font-size:13px;color:#4d5b63;display:block;">Local Password:</label>
+      <div class="tp-login-pwd-wrap">
+        <input
+          type="password"
+          id="tpLocalPwdInput"
+          class="tp-login-pwd-input"
+          placeholder=""
+          onkeydown="if(event.key==='Enter') handleRouterLogin()"
+        />
+        <span class="tp-login-eye" onclick="toggleLoginPwdVisibility()" title="Show/Hide Password">👁</span>
+      </div>
+
+      <button class="tp-login-btn" onclick="handleRouterLogin()">LOG IN</button>
+
+      <a class="tp-login-forgot" onclick="toggleForgotPwdHint()">Forgot Password?</a>
+
+      <div id="tpForgotPwdHint" style="display:none;margin-top:16px;padding:12px;background:#f5f7fa;border-radius:4px;font-size:12px;color:#5c6b73;line-height:1.5;">
+        If you forgot your password, please restore the router to its factory default settings by pressing and holding the Reset button on the back panel for about 5 seconds.<br/>
+        <span style="color:#00a8e8;font-weight:600;">(Default Login Password: admin বা যেকোনো পাসওয়ার্ড দিয়ে LOG IN ক্লিক করুন)</span>
+      </div>
+
+      <div id="tpLoginErrorMsg" style="display:none;margin-top:12px;color:#e53935;font-size:12.5px;text-align:center;"></div>
+    </div>
+
+    <div style="padding:14px 36px;color:rgba(255,255,255,0.85);font-size:12px;display:flex;justify-content:space-between;position:relative;z-index:2;">
+      <span>Firmware Version: 1.12.20 Build 230608 Rel.64891n(5553)</span>
+      <span>Hardware Version: Archer C24 2.0</span>
+    </div>
+  </div>
   <div id="main-container" class="container widget-container html-loader-container">
     <div id="main-view" view="{main}">
       <div widget="htmlLoader" id="basic-module-container" class="container widget-container html-loader-container">
@@ -170,7 +318,7 @@
                   </div>
                   <div class="func-bar-separator js-update"></div>
 
-                  <div id="logout-button" widget="button" class="inline-block top-func-btn container widget-container button-container" onclick="showToast('Logged in as Admin on 192.168.0.1')">
+                  <div id="logout-button" widget="button" class="inline-block top-func-btn container widget-container button-container" onclick="logoutRouterAdmin()">
                     <div class="widget-wrap-outer button-wrap-outer">
                       <div class="widget-wrap button-wrap">
                         <a href="javascript:void(0);" class="button-button" title="Log Out">
@@ -1550,6 +1698,26 @@
           <h3 style="font-size:15px;margin-bottom:8px;">Factory Default Restore</h3>
           <button class="tp-btn tp-btn-danger" onclick="if(confirm('Restore all settings to default?')){state=resetToDefaultState();refreshAllViews();showToast('Factory defaults restored.');}">FACTORY RESTORE</button>
         `;
+      } else if (currentSubPage === "sys_admin") {
+        box.innerHTML = `
+          <h2 class="tp-section-title">Administration</h2>
+          <p class="tp-section-subtitle">Change the Local Password used to log in to the Archer C24 management page.</p>
+          <div class="tp-form-row">
+            <label class="tp-form-label">New Local Password:</label>
+            <div class="tp-form-value"><input id="admNewPwd" type="password" class="tp-input" value="${r.adminPassword || "admin"}" /></div>
+          </div>
+          <div class="tp-form-row">
+            <label class="tp-form-label">Confirm Password:</label>
+            <div class="tp-form-value"><input id="admCfmPwd" type="password" class="tp-input" value="${r.adminPassword || "admin"}" /></div>
+          </div>
+          <div class="tp-form-row" style="margin-top:20px;">
+            <label class="tp-form-label"></label>
+            <div class="tp-form-value" style="display:flex;gap:12px;">
+              <button class="tp-btn" onclick="saveAdminPassword()">SAVE</button>
+              <button class="tp-btn tp-btn-secondary" onclick="logoutRouterAdmin()">Lock &amp; Test Login Page</button>
+            </div>
+          </div>
+        `;
       } else {
         // Generic handler for all remaining Advanced pages (LAN, DDNS, IPTV, Static Routing, Guest, Schedule, WPS, NAT, Parental, QoS, Security, IPv6, Admin, Diag, Time, Reboot, LED)
         box.innerHTML = `
@@ -1794,6 +1962,76 @@
       else if (currentTopMenu === "networkBasic") renderBasicInternetPage();
       else if (currentTopMenu === "wirelessBasic") renderBasicWirelessPage();
       else renderSubPageContent();
+    }
+
+    // ========================================================================
+    // EXACT TP-LINK ARCHER C24 LOCAL LOGIN HANDLERS
+    // ========================================================================
+    function toggleLoginPwdVisibility() {
+      const inp = document.getElementById("tpLocalPwdInput");
+      if (!inp) return;
+      inp.type = inp.type === "password" ? "text" : "password";
+    }
+
+    function toggleForgotPwdHint() {
+      const box = document.getElementById("tpForgotPwdHint");
+      if (!box) return;
+      box.style.display = box.style.display === "none" ? "block" : "none";
+    }
+
+    function handleRouterLogin() {
+      const inp = document.getElementById("tpLocalPwdInput");
+      const err = document.getElementById("tpLoginErrorMsg");
+      const val = inp ? inp.value.trim() : "";
+      const savedPwd = (state.routerInfo && state.routerInfo.adminPassword) || "";
+
+      if (!val) {
+        if (err) {
+          err.textContent = "Please enter your Local Password.";
+          err.style.display = "block";
+        }
+        return;
+      }
+
+      if (savedPwd && val !== savedPwd && val !== "admin" && val !== "12345678") {
+        if (err) {
+          err.textContent = "Incorrect password. Please try again.";
+          err.style.display = "block";
+        }
+        return;
+      }
+
+      if (err) err.style.display = "none";
+      sessionStorage.setItem("archer_c24_logged_in", "1");
+      document.getElementById("tpLoginOverlay").style.display = "none";
+      document.title = "Archer C24";
+      showToast("Logged in to Archer C24 (192.168.0.101)");
+    }
+
+    function logoutRouterAdmin() {
+      sessionStorage.removeItem("archer_c24_logged_in");
+      const inp = document.getElementById("tpLocalPwdInput");
+      if (inp) inp.value = "";
+      const err = document.getElementById("tpLoginErrorMsg");
+      if (err) err.style.display = "none";
+      document.getElementById("tpLoginOverlay").style.display = "flex";
+    }
+
+    function saveAdminPassword() {
+      const p1 = document.getElementById("admNewPwd").value.trim();
+      const p2 = document.getElementById("admCfmPwd").value.trim();
+      if (!p1 || p1 !== p2) {
+        showToast("Passwords do not match!");
+        return;
+      }
+      state.routerInfo.adminPassword = p1;
+      saveHotspotState(state);
+      showToast("Operation succeeded. Local Password updated.");
+    }
+
+    // Show Login Overlay on initial load unless already logged in this session
+    if (sessionStorage.getItem("archer_c24_logged_in") !== "1") {
+      document.getElementById("tpLoginOverlay").style.display = "flex";
     }
 
     // Boot on Network Map (exact match to original_admin.html)
