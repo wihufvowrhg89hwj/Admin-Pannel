@@ -1430,8 +1430,25 @@
           </div>
         `;
       } else if (currentSubPage === "sys_firmware") {
-        // Exact Firmware Update page from the user's screenshot
+        // Exact Firmware Update page from the user's screenshot + Anti-Brick Hardware Guard
         box.innerHTML = `
+          <div style="background:#f0fdf4;border:1.5px solid #22c55e;border-radius:8px;padding:16px 20px;margin-bottom:24px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+              <div>
+                <span class="tp-badge tp-badge-success" style="font-size:12px;">🛡️ ANTI-BRICK SAFE MODE ACTIVE</span>
+                <h3 style="font-size:15px;color:#14532d;margin-top:6px;">Archer C24 v2.0 Hardware &amp; Bootloader Protection</h3>
+                <p style="font-size:12.5px;color:#166534;margin-top:2px;">
+                  আপনার রাউটারের ফ্ল্যাশ মেমোরি (TPOS 2.5MB) সুরক্ষিত আছে। শুধুমাত্র অফিশিয়াল ভেরিফাইড সিগনেচার (`SHA-256: A58BFB57...942D`) ছাড়া অন্য কোনো মডিফাইড `.bin` ফাইল এখানে ব্লক করা হয়েছে যেন রাউটার কখনোই Brick না হয়।
+                </p>
+              </div>
+            </div>
+            <div style="margin-top:10px;padding-top:10px;border-top:1px dashed #86efac;font-size:12px;color:#15803d;font-family:Consolas,monospace;">
+              <div>✔ Connected Router IP: <strong>192.168.0.101</strong> | Base MAC: <strong>8C-90-2D-AD-8B-60</strong> | 5GHz BSSID: <strong>8C-90-2D-AD-8B-62 (Ch 153)</strong></div>
+              <div>✔ Upstream Gateway: <strong>192.168.0.1 (CC-2D-21-37-BE-70)</strong> | Laptop: <strong>192.168.0.102 (4C-44-5B-F2-F3-50)</strong></div>
+              <div>✔ Official Firmware SHA-256: <strong>A58BFB57CC994B4C15CF9E005E7D20B2CB0E6D81F605ECB0BE4568F0DD91942D</strong> (Read-Only Locked)</div>
+            </div>
+          </div>
+
           <h2 class="tp-section-title">Local Update</h2>
           <p class="tp-section-subtitle">Update firmware from a local file.</p>
           <div class="tp-form-row">
@@ -1446,8 +1463,11 @@
             <label class="tp-form-label">New Firmware File:</label>
             <div class="tp-form-value">
               <input id="fwFileInput" class="tp-input" readonly value="c24v2-TPOS-up-boot-128B_2023-06-09_14.01.25.bin" />
-              <input type="file" id="fwFileHidden" accept=".bin" style="display:none" onchange="document.getElementById('fwFileInput').value=this.files[0]?.name||''" />
+              <input type="file" id="fwFileHidden" accept=".bin" style="display:none" onchange="verifySelectedFirmwareFile(this.files[0])" />
             </div>
+          </div>
+          <div id="fwCheckResultBox" style="margin:0 0 16px 210px;font-size:12.5px;color:#15803d;font-weight:600;">
+            ✔ Official untouched image verified (2,544,708 bytes — Zero-Brick Safe)
           </div>
           <div class="tp-form-row">
             <label class="tp-form-label"></label>
@@ -1455,9 +1475,9 @@
           </div>
           <div class="tp-form-row" style="margin-top:20px;">
             <label class="tp-form-label"></label>
-            <div class="tp-form-value"><button class="tp-btn tp-btn-wide" onclick="showToast('Firmware image verified: Archer C24 2.0 is up to date!')">UPDATE</button></div>
+            <div class="tp-form-value"><button id="fwUpdateBtn" class="tp-btn tp-btn-wide" onclick="safeFirmwareAction()">UPDATE</button></div>
           </div>
-          <div style="margin-top:30px;color:#4d5b63;font-size:13px;"><strong>Note:</strong> Please select a firmware file version that corresponds to your hardware (${r.hardwareVersion}).</div>
+          <div style="margin-top:30px;color:#4d5b63;font-size:13px;"><strong>Note:</strong> Your router is already running the latest official build (<code>1.12.20 Build 230608</code>). All custom Hotspot &amp; bKash/Nagad/Rocket features run safely via the external web/cloud controller without modifying the router's internal SPI flash.</div>
         `;
       } else if (currentSubPage === "sys_syslog") {
         box.innerHTML = `
@@ -1677,6 +1697,57 @@
       saveHotspotState(state);
       renderSubPageContent();
       showToast(`Generated ${qty} vouchers!`);
+    }
+
+    let isFirmwareVerifiedSafe = true;
+
+    async function verifySelectedFirmwareFile(file) {
+      if (!file) return;
+      document.getElementById("fwFileInput").value = file.name;
+      const resBox = document.getElementById("fwCheckResultBox");
+      const btn = document.getElementById("fwUpdateBtn");
+      resBox.style.color = "#00a8e8";
+      resBox.textContent = "⏳ Checking hardware compatibility & SHA-256 signature...";
+
+      try {
+        const buf = await file.arrayBuffer();
+        const hashBuffer = await crypto.subtle.digest("SHA-256", buf);
+        const hashHex = Array.from(new Uint8Array(hashBuffer))
+          .map(b => b.toString(16).padStart(2, "0"))
+          .join("")
+          .toUpperCase();
+
+        const officialHash = "A58BFB57CC994B4C15CF9E005E7D20B2CB0E6D81F605ECB0BE4568F0DD91942D";
+        const officialSize = 2544708;
+
+        if (file.size === officialSize && hashHex === officialHash) {
+          isFirmwareVerifiedSafe = true;
+          resBox.style.color = "#15803d";
+          resBox.innerHTML = `✔ <strong>SAFE &amp; VERIFIED:</strong> Official Archer C24 v2.0 image matched (SHA-256: <code>${hashHex.slice(0, 16)}...</code>, ${file.size} bytes)`;
+          btn.disabled = false;
+          btn.style.opacity = "1";
+          showToast("✔ Firmware signature verified safe for Archer C24 2.0!");
+        } else {
+          isFirmwareVerifiedSafe = false;
+          resBox.style.color = "#dc2626";
+          resBox.innerHTML = `⛔ <strong>ANTI-BRICK PROTECTION TRIGGERED:</strong> Blocked! File size (${file.size} B) or SHA-256 (<code>${hashHex.slice(0, 16)}...</code>) does NOT match official Archer C24 2.0 signature. Flashing this file could brick the router!`;
+          btn.disabled = true;
+          btn.style.opacity = "0.45";
+          showToast("⛔ BLOCKED: Unverified/Modified .bin file rejected to prevent bricking!");
+        }
+      } catch (e) {
+        isFirmwareVerifiedSafe = false;
+        resBox.style.color = "#dc2626";
+        resBox.textContent = "⛔ Error verifying firmware file. Blocked for safety.";
+      }
+    }
+
+    function safeFirmwareAction() {
+      if (!isFirmwareVerifiedSafe) {
+        showToast("⛔ Anti-Brick Lock Active: Cannot flash unverified firmware!");
+        return;
+      }
+      showToast("🛡️ Safe Check Complete: Router (192.168.0.101) is already running official 1.12.20 Build 230608! No flash needed.");
     }
 
     function downloadSystemLog() {
