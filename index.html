@@ -345,7 +345,7 @@
                           <span class="sub-navigator-icon-after"></span>
                         </a>
                       </li>
-                      <li navi-value="networkBasic" class="navigator-li navigator-li-level1 navigator-li-effective" onclick="selectTopMenu('networkBasic')">
+                      <li navi-value="networkBasic" class="navigator-li navigator-li-level1 navigator-li-effective" onclick="selectTopMenu('networkBasic', 'net_lan')">
                         <a href="javascript:void(0)">
                           <span class="sub-navigator-icon"></span>
                           <span class="sub-navigator-text">Internet</span>
@@ -359,10 +359,10 @@
                           <span class="sub-navigator-icon-after"></span>
                         </a>
                       </li>
-                      <li navi-value="advanced" class="navigator-li navigator-li-level1 has-sub-navi" onclick="selectTopMenu('advanced', 'adv_status')">
+                      <li navi-value="advanced" class="navigator-li navigator-li-level1 has-sub-navi" onclick="selectTopMenu('advanced', 'sys_opmode')">
                         <a href="javascript:void(0)">
                           <span class="sub-navigator-icon"></span>
-                          <span class="sub-navigator-text">Advanced</span>
+                          <span class="sub-navigator-text">System / Advanced</span>
                           <span class="sub-navigator-icon-after"></span>
                         </a>
                       </li>
@@ -702,6 +702,14 @@
       }
     ];
 
+    // Exact Internet Sidebar Tree (from navigator.re.json: LAN, DHCP Server, Access Control + WAN)
+    const INTERNET_MENU_TREE = [
+      { id: "net_lan", title: "LAN" },
+      { id: "net_dhcp", title: "DHCP Server" },
+      { id: "sec_access", title: "Access Control" },
+      { id: "net_wan", title: "WAN / ISP Settings" }
+    ];
+
     // Custom Hotspot & Pay Menu Tree (bKash, Nagad, Rocket)
     const HOTSPOT_MENU_TREE = [
       { id: "hs_dashboard", title: "📊 Sales & TrxID Approval" },
@@ -731,6 +739,12 @@
       if (cBadge) cBadge.textContent = onlineClients;
     }
 
+    function getActiveSidebarTree() {
+      if (currentTopMenu === "networkBasic") return INTERNET_MENU_TREE;
+      if (currentTopMenu === "hotspotPay") return HOTSPOT_MENU_TREE;
+      return ADVANCED_MENU_TREE;
+    }
+
     function selectTopMenu(menu, subId) {
       currentTopMenu = menu;
       document.querySelectorAll("#topMenuUl > li").forEach(li => {
@@ -748,20 +762,27 @@
         viewNetmap.style.display = "block";
         viewDyn.style.display = "none";
         renderOriginalNetworkMap();
-      } else if (menu === "networkBasic" || menu === "wirelessBasic") {
+      } else if (menu === "networkBasic") {
+        pageWrap.className = "page with-sidebar";
+        navSidebar.style.display = "block";
+        viewNetmap.style.display = "none";
+        viewDyn.style.display = "block";
+        currentSubPage = subId || "net_lan";
+        renderSidebar(INTERNET_MENU_TREE);
+        renderSubPageContent();
+      } else if (menu === "wirelessBasic") {
         pageWrap.className = "page no-navigator";
         navSidebar.style.display = "none";
         viewNetmap.style.display = "none";
         viewDyn.style.display = "block";
-        if (menu === "networkBasic") renderBasicInternetPage();
-        else renderBasicWirelessPage();
+        renderBasicWirelessPage();
       } else if (menu === "advanced") {
         pageWrap.className = "page with-sidebar";
         navSidebar.style.display = "block";
         viewNetmap.style.display = "none";
         viewDyn.style.display = "block";
         if (subId) currentSubPage = subId;
-        else if (!currentSubPage || currentSubPage.startsWith("hs_")) currentSubPage = "adv_status";
+        else if (!currentSubPage || currentSubPage.startsWith("hs_")) currentSubPage = "sys_opmode";
         renderSidebar(ADVANCED_MENU_TREE);
         renderSubPageContent();
       } else if (menu === "hotspotPay") {
@@ -1078,13 +1099,13 @@
 
     function toggleAdvGroup(groupId, defaultChildId) {
       currentSubPage = defaultChildId;
-      renderSidebar(currentTopMenu === "advanced" ? ADVANCED_MENU_TREE : HOTSPOT_MENU_TREE);
+      renderSidebar(getActiveSidebarTree());
       renderSubPageContent();
     }
 
     function selectSubPage(subId) {
       currentSubPage = subId;
-      renderSidebar(currentTopMenu === "advanced" ? ADVANCED_MENU_TREE : HOTSPOT_MENU_TREE);
+      renderSidebar(getActiveSidebarTree());
       renderSubPageContent();
     }
 
@@ -1644,6 +1665,103 @@
           <p style="color:#76838f;font-size:13px;margin-bottom:12px;">Save system log locally.</p>
           <button class="tp-btn" onclick="downloadSystemLog()">SAVE TO LOCAL</button>
         `;
+      } else if (currentSubPage === "net_lan") {
+        // Exact LAN (#lanAPAdv) page matching user's screenshot & modules/lan_ap_re/view.html
+        const isDynamicLan = (r.lanIpType || "Dynamic IP") === "Dynamic IP";
+        box.innerHTML = `
+          <h2 class="tp-section-title">LAN</h2>
+          <p class="tp-section-subtitle">View and configure LAN settings.</p>
+
+          <div class="tp-form-row">
+            <label class="tp-form-label">MAC Address:</label>
+            <div class="tp-form-value">${r.macAddress}</div>
+          </div>
+
+          <div class="tp-form-row" style="align-items:flex-start;">
+            <label class="tp-form-label" style="padding-top:4px;">IP Type:</label>
+            <div class="tp-form-value" style="display:flex;flex-direction:column;gap:10px;">
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                <input type="radio" name="lanIpTypeRadio" value="Dynamic IP" ${isDynamicLan ? "checked" : ""} onchange="r.lanIpType='Dynamic IP';renderSubPageContent()" />
+                <span>Dynamic IP</span>
+              </label>
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                <input type="radio" name="lanIpTypeRadio" value="Static IP" ${!isDynamicLan ? "checked" : ""} onchange="r.lanIpType='Static IP';renderSubPageContent()" />
+                <span>Static IP</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="tp-form-row">
+            <label class="tp-form-label">IP Address:</label>
+            <div class="tp-form-value">
+              <input id="lanApIpInput" class="tp-input" value="${r.lanIp}" ${isDynamicLan ? 'disabled style="background:#f2f4f6;color:#9aa5b1;"' : ""} />
+            </div>
+          </div>
+
+          <div class="tp-form-row">
+            <label class="tp-form-label">Subnet Mask:</label>
+            <div class="tp-form-value">
+              <select id="lanApMaskInput" class="tp-select" ${isDynamicLan ? 'disabled style="background:#f2f4f6;color:#9aa5b1;"' : ""}>
+                ${["255.255.255.0", "255.255.0.0", "255.0.0.0"]
+                  .map(m => `<option ${r.subnetMask === m ? "selected" : ""}>${m}</option>`)
+                  .join("")}
+              </select>
+            </div>
+          </div>
+
+          <div class="tp-form-row">
+            <label class="tp-form-label">Default Gateway:</label>
+            <div class="tp-form-value">
+              <input id="lanApGwInput" class="tp-input" value="${r.wanGateway || "192.168.0.1"}" ${isDynamicLan ? 'disabled style="background:#f2f4f6;color:#9aa5b1;"' : ""} />
+            </div>
+          </div>
+
+          <div class="tp-form-row" style="margin-top:26px;">
+            <label class="tp-form-label"></label>
+            <div class="tp-form-value">
+              <button class="tp-btn tp-btn-wide" onclick="if(!${isDynamicLan}){r.lanIp=document.getElementById('lanApIpInput').value;r.subnetMask=document.getElementById('lanApMaskInput').value;r.wanGateway=document.getElementById('lanApGwInput').value;}saveHotspotState(state);showToast('Operation succeeded.')">SAVE</button>
+            </div>
+          </div>
+        `;
+      } else if (currentSubPage === "sec_access") {
+        box.innerHTML = `
+          <h2 class="tp-section-title">Access Control</h2>
+          <p class="tp-section-subtitle">Control access to your network from specific devices (Whitelist / Blacklist).</p>
+          <div class="tp-form-row">
+            <label class="tp-form-label">Access Control:</label>
+            <div class="tp-form-value"><label><input type="checkbox" checked /> Enable Access Control</label></div>
+          </div>
+          <div class="tp-form-row">
+            <label class="tp-form-label">Access Mode:</label>
+            <div class="tp-form-value">
+              <label style="margin-right:18px;"><input type="radio" name="acmode" checked /> Blacklist</label>
+              <label><input type="radio" name="acmode" /> Whitelist</label>
+            </div>
+          </div>
+          <h3 style="font-size:14.5px;margin:20px 0 10px;">Online Devices &amp; Blacklist Status</h3>
+          <div class="tp-table-wrap">
+            <table class="tp-table">
+              <thead>
+                <tr><th>Device Name</th><th>IP Address</th><th>MAC Address</th><th>Status</th><th>Modify</th></tr>
+              </thead>
+              <tbody>
+                ${state.connectedClients
+                  .map(
+                    (c, i) => `
+                  <tr>
+                    <td><strong>${c.hostname}</strong></td>
+                    <td>${c.ip}</td>
+                    <td>${c.mac}</td>
+                    <td><span class="tp-badge ${c.status === "Blocked" ? "tp-badge-danger" : "tp-badge-success"}">${c.status}</span></td>
+                    <td><button class="tp-btn tp-btn-sm ${c.status === "Blocked" ? "tp-btn-success" : "tp-btn-danger"}" onclick="toggleBlockClient(${i})">${c.status === "Blocked" ? "Unblock" : "Block"}</button></td>
+                  </tr>
+                `
+                  )
+                  .join("")}
+              </tbody>
+            </table>
+          </div>
+        `;
       } else if (currentSubPage === "net_dhcp") {
         box.innerHTML = `
           <h2 class="tp-section-title">DHCP Server</h2>
@@ -1672,22 +1790,61 @@
           </div>
         `;
       } else if (currentSubPage === "sys_opmode") {
+        // Exact Operation Mode page with Wireless Router, Access Point, and Range Extender Mode (Current)
         box.innerHTML = `
           <h2 class="tp-section-title">Operation Mode</h2>
-          <p class="tp-section-subtitle">Select an operation mode for your Archer C24.</p>
-          ${["Wireless Router", "Access Point", "Range Extender", "WISP"]
-            .map(
-              m => `
-            <div style="margin-bottom:12px;">
-              <label style="display:flex;align-items:center;gap:10px;padding:12px 16px;border:1px solid var(--tp-border);border-radius:6px;cursor:pointer;">
-                <input type="radio" name="opmode" ${r.operationMode === m ? "checked" : ""} onchange="r.operationMode='${m}'" />
-                <strong>${m} Mode</strong>
+          <p class="tp-section-subtitle">Select an operation mode according to your network requirements.</p>
+
+          <div style="display:flex;flex-direction:column;gap:22px;">
+            <div>
+              <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14.5px;color:#36444b;font-weight:600;">
+                <input type="radio" name="opmode" ${r.operationMode === "Wireless Router" ? "checked" : ""} onchange="r.operationMode='Wireless Router';renderSubPageContent()" />
+                <span>Wireless Router Mode</span>
               </label>
+              <p style="margin:6px 0 12px 26px;font-size:13px;color:#5c6b73;">In this mode, the router provides internet access for multiple wired and wireless devices simultaneously.</p>
+              <div style="margin-left:26px;background:#f7f9fa;border-radius:8px;padding:18px 28px;display:flex;align-items:center;gap:18px;max-width:520px;border:1px solid #eef2f5;">
+                <span style="font-size:28px;">🌐</span>
+                <span style="flex:1;border-top:2px solid #00a8e8;position:relative;text-align:center;font-size:11px;color:#00a8e8;">WAN</span>
+                <span style="padding:6px 12px;border:1.5px solid #00a8e8;border-radius:6px;font-size:12px;font-weight:600;color:#00758f;">Archer C24 ))</span>
+                <span style="flex:1;border-top:2px dashed #00a8e8;"></span>
+                <span style="font-size:22px;">💻📱</span>
+              </div>
             </div>
-          `
-            )
-            .join("")}
-          <button class="tp-btn" style="margin-top:14px;" onclick="saveHotspotState(state);showToast('Operation succeeded.')">SAVE</button>
+
+            <div>
+              <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14.5px;color:#36444b;font-weight:600;">
+                <input type="radio" name="opmode" ${r.operationMode === "Access Point" ? "checked" : ""} onchange="r.operationMode='Access Point';renderSubPageContent()" />
+                <span>Access Point Mode</span>
+              </label>
+              <p style="margin:6px 0 12px 26px;font-size:13px;color:#5c6b73;">In this mode, the router changes an existing wired network into a wireless one.</p>
+              <div style="margin-left:26px;background:#f7f9fa;border-radius:8px;padding:18px 28px;display:flex;align-items:center;gap:14px;max-width:520px;border:1px solid #eef2f5;">
+                <span style="font-size:28px;">🌐</span>
+                <span style="flex:1;border-top:2px solid #00a8e8;"></span>
+                <span style="padding:5px 10px;border:1.5px solid #00758f;border-radius:5px;font-size:11px;color:#00758f;">Main Router</span>
+                <span style="flex:1;border-top:2px solid #00a8e8;"></span>
+                <span style="padding:5px 10px;border:1.5px solid #00a8e8;border-radius:5px;font-size:11px;font-weight:600;color:#00758f;">Archer C24 ))</span>
+                <span style="font-size:22px;">💻📱</span>
+              </div>
+            </div>
+
+            <div>
+              <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14.5px;color:#00a8e8;font-weight:600;">
+                <input type="radio" name="opmode" ${(r.operationMode || "Range Extender") === "Range Extender" ? "checked" : ""} onchange="r.operationMode='Range Extender';renderSubPageContent()" />
+                <span>Range Extender Mode (Current)</span>
+              </label>
+              <p style="margin:6px 0 12px 26px;font-size:13px;color:#5c6b73;">In this mode, the router boosts the existing wireless coverage in your home.</p>
+              <div style="margin-left:26px;background:#f7f9fa;border-radius:8px;padding:18px 28px;display:flex;align-items:center;gap:14px;max-width:520px;border:1px solid #eef2f5;">
+                <span style="font-size:28px;">🌐</span>
+                <span style="flex:1;border-top:2px solid #00a8e8;"></span>
+                <span style="padding:5px 10px;border:1.5px solid #00758f;border-radius:5px;font-size:11px;color:#00758f;">Host Router (192.168.0.1) ))</span>
+                <span style="color:#00a8e8;font-weight:700;">((( • )))</span>
+                <span style="padding:5px 10px;border:1.5px solid #00a8e8;border-radius:5px;font-size:11px;font-weight:600;color:#00758f;">Archer C24 (192.168.0.101)</span>
+                <span style="font-size:22px;">💻📱</span>
+              </div>
+            </div>
+          </div>
+
+          <button class="tp-btn tp-btn-wide" style="margin:24px 0 0 26px;" onclick="saveHotspotState(state);showToast('Operation succeeded.')">SAVE</button>
         `;
       } else if (currentSubPage === "sys_backup") {
         box.innerHTML = `
@@ -1959,9 +2116,11 @@
     function refreshAllViews() {
       updateBadges();
       if (currentTopMenu === "networkMap") renderOriginalNetworkMap();
-      else if (currentTopMenu === "networkBasic") renderBasicInternetPage();
       else if (currentTopMenu === "wirelessBasic") renderBasicWirelessPage();
-      else renderSubPageContent();
+      else {
+        renderSidebar(getActiveSidebarTree());
+        renderSubPageContent();
+      }
     }
 
     // ========================================================================
