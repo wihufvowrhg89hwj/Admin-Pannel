@@ -1,0 +1,1 @@
+jQuery.su.storeManager.define("wlStatisticsStore",{type:"store",fields:[{name:"deviceType"},{name:"name"},{name:"type"},{name:"mac"},{name:"encryption"},{name:"rxBytes"},{name:"txBytes"}],convert:function(e){return e.list.slice(0,parseInt(e.staCnt))},proxy:{blocks:WIRELESS_STATISTICS_DATA_ID}});

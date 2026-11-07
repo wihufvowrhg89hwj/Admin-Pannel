@@ -1,0 +1,1 @@
+!function(g){g.su=g.su||{},g.su.imgSrc={logoIcon:"./themes/default/img/logo-icon.png?t=b059ce59",loading:"./themes/default/img/Loading.gif?t=b059ce59"}}(jQuery);

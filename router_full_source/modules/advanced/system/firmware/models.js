@@ -1,0 +1,1 @@
+$.su.modelManager.define("firmwareSetModel",{type:"model",fields:[{name:"firmwareVersion",mapping:"softVer"},{name:"hardwareVersion",mapping:"hardVer"}],proxy:{blocks:DEVICE_DATA_ID}}),$.su.define("uploadFirmwareProxy",{extend:"MERProxy",api:{upload:{url:$.su.url("?code="+HTTP_UPLOAD+"&asyn=0")}}});

@@ -1,0 +1,1 @@
+$.su.modelManager.define("firmwareModel",{type:"model",preventFailEvent:!0,fields:[{name:"hardwareVersion",mapping:"hardVer"},{name:"firmwareVersion",mapping:"softVer"}],proxy:{reAuth:!1,gdpr:!1,blocks:DEVICE_DATA_ID}});

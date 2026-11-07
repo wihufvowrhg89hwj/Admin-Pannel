@@ -1,0 +1,1 @@
+jQuery.su.moduleManager.define("wirelessSettingsRE",{services:["device"],views:["wirelessReView"],listeners:{ev_on_launch:function(e,n,i,r,t,s,o){o.device.getCurrentMode()==SYSTEM_MODE_RE&&i.extendNetworkLoader.load()}},init:function(e,n,i,r,t,s){}},function(e,n,i,r,t,s){return{}});

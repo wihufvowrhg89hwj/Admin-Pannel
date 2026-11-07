@@ -1,0 +1,1 @@
+$.su.modelManager.define("backupRestoreModel",{type:"model",fields:[]}),$.su.define("restoreProxy",{extend:"MERProxy",api:{upload:{url:$.su.url("?code="+HTTP_CONFIG+"&asyn=0")}}}),$.su.define("restoreRebootProxy",{extend:"MERProxy",blocks:[LAN_DATA_ID,TPDOMAIN_DATA_ID,LCLPORT_DATA_ID]});

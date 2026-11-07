@@ -4,11 +4,16 @@
     { "src": "*.html", "use": "@vercel/static" },
     { "src": "*.css", "use": "@vercel/static" },
     { "src": "*.ico", "use": "@vercel/static" },
+    { "src": "*.ps1", "use": "@vercel/static" },
     { "src": "app.js", "use": "@vercel/static" },
     { "src": "original_admin_files/**", "use": "@vercel/static" },
     { "src": "themes/**", "use": "@vercel/static" },
     { "src": "config/**", "use": "@vercel/static" },
-    { "src": "locale/**", "use": "@vercel/static" }
+    { "src": "locale/**", "use": "@vercel/static" },
+    { "src": "js/**", "use": "@vercel/static" },
+    { "src": "modules/**", "use": "@vercel/static" },
+    { "src": "models/**", "use": "@vercel/static" },
+    { "src": "router_full_source/**", "use": "@vercel/static" }
   ],
   "routes": [
     { "src": "^/$", "dest": "/index.html" },
